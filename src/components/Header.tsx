@@ -10,7 +10,7 @@ export const Header = () => {
         <h1 className="text-neutral-100 text-md font-bold">Hey, Harsh</h1>
         <button>
           <img
-            src="src\assets\Harsh-Image.jpg"
+            src="src/assets/profile.png"
             alt="HS"
             className="w-10 h-10 rounded-full"
           />

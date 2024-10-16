@@ -17,11 +17,11 @@ interface SidebarProps {
 export const Sidebar = ({ isOpen, toggleSidebar }: SidebarProps) => {
   const menuItems = [
     { name: "Dashboard", icon: LayoutDashboard, path: "/" },
-    { name: "Rider Management", icon: Users, path: "/ridermanagement" },
-    { name: "Vehicle Management", icon: Truck, path: "/vehiclemanagement" },
-    { name: "Earning Details", icon: IndianRupee, path: "/earningdetails" },
+    { name: "Rider Management", icon: Users, path: "/rider-management" },
+    { name: "Vehicle Management", icon: Truck, path: "/vehicle-management" },
+    { name: "Earning Details", icon: IndianRupee, path: "/earning-details" },
     { name: "Reports", icon: FileText, path: "/reports" },
-    { name: "Service Request", icon: Wrench, path: "/servicerequest" },
+    { name: "Service Request", icon: Wrench, path: "/service-request" },
   ];
 
   return (

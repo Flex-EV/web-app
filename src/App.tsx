@@ -21,11 +21,11 @@ const App = () => {
         <div className="flex-1 overflow-auto">
           <Routes>
             <Route path="/" element={<Dashboard />} />
-            <Route path="/ridermanagement" element={<RiderManagement />} />
-            <Route path="/vehiclemanagement" element={<VehicleManagement />} />
-            <Route path="/earningdetails" element={<EarningDetails />} />
+            <Route path="/rider-management" element={<RiderManagement />} />
+            <Route path="/vehicle-management" element={<VehicleManagement />} />
+            <Route path="/earning-details" element={<EarningDetails />} />
             <Route path="/reports" element={<Reports />} />
-            <Route path="/servicerequest" element={<ServiceRequest />} />
+            <Route path="/service-request" element={<ServiceRequest />} />
           </Routes>
         </div>
       </main>
