@@ -1,10 +1,10 @@
 {
     "*/**/*.{js,jsx,ts,tsx}": [
-        "prettier --write",
-        "eslint --fix",
-        "eslint"
+        "yarn format",
+        "yarn lint:fix",
+        "yarn lint"
     ],
     "*/**/*.{json,css,md}": [
-        "prettier --write"
+        "yarn format"
     ]
 }
