@@ -1,13 +1,13 @@
-import { Menu } from "lucide-react";
-import { Link } from "react-router-dom";
-import { MENU_ITEMS } from "../data/Sidebar.data";
-import { SidebarProps } from "../model/Sidebar.interface";
+import { Menu } from 'lucide-react';
+import { Link } from 'react-router-dom';
+import { MENU_ITEMS } from '../data/Sidebar.data';
+import { SidebarProps } from '../model/Sidebar.interface';
 
 const Sidebar = ({ isOpen, toggleSidebar }: SidebarProps) => {
   return (
     <div
       className={`${
-        isOpen ? "w-60" : "w-20"
+        isOpen ? 'w-60' : 'w-20'
       } bg-black text-white h-screen flex flex-col transition-all duration-300`}
     >
       <div className="p-4 flex items-center mb-6 mt-6 overflow-hidden">
@@ -34,10 +34,10 @@ const Sidebar = ({ isOpen, toggleSidebar }: SidebarProps) => {
               <Link
                 to={item.path}
                 className={`px-4 py-3 hover:bg-gray-800 cursor-pointer transition-colors duration-200 flex items-center ${
-                  isOpen ? "" : "justify-center"
+                  isOpen ? '' : 'justify-center'
                 }`}
               >
-                <item.icon className={`h-5 w-5 ${isOpen ? "mr-3" : ""}`} />
+                <item.icon className={`h-5 w-5 ${isOpen ? 'mr-3' : ''}`} />
                 {isOpen && item.name}
               </Link>
             </li>

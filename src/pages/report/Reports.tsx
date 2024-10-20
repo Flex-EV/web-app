@@ -1,4 +1,4 @@
- const Reports = () => {
+const Reports = () => {
   return <div className="text-neutral-100">Reports</div>;
 };
 

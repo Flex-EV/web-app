@@ -1,4 +1,4 @@
-import { statuses } from "../data/VehicleStatus.data";
+import { statuses } from '../data/VehicleStatus.data';
 
 const VehicleStatus = () => {
   return (
