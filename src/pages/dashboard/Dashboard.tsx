@@ -2,7 +2,7 @@ import Header from "@/ui/components/Header";
 import Map from "./components/Map";
 import VehicleStatus from "./components/VehicleStatus";
 
-export const Dashboard = () => {
+const Dashboard = () => {
   return (
     <section className="flex flex-col h-screen p-7 ml-5 gap-5">
       <Header />
@@ -13,3 +13,5 @@ export const Dashboard = () => {
     </section>
   );
 };
+
+export default Dashboard;

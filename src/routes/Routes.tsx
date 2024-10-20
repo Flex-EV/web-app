@@ -6,7 +6,7 @@ import VehicleManagement from "@/pages/vehicle-management/VehicleManagement";
 import EarningDetails  from "@/pages/earning-details/EarningDetails";
 import Reports from "@/pages/report/Reports";
 import ServiceRequest from "@/pages/service-request/ServiceRequest";
-import { Dashboard } from "@/pages/dashboard/Dashboard";
+import Dashboard from "@/pages/dashboard/Dashboard";
 
 const Routes = () => {
   const routes = useRoutes([
