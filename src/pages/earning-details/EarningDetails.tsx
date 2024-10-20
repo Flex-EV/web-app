@@ -1,11 +1,5 @@
-function EarningDetails() {
-  const value = 12;
-
-  return (
-    <>
-      <div>Earning Details {value}</div>
-    </>
-  );
-}
+const EarningDetails = () => {
+  return <div className="text-neutral-100">EarningDetails</div>;
+};
 
 export default EarningDetails;
