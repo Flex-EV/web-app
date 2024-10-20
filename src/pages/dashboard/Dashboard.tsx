@@ -1,6 +1,6 @@
-import Header from "@/ui/components/Header";
-import Map from "./components/Map";
-import VehicleStatus from "./components/VehicleStatus";
+import Header from '@/ui/components/Header';
+import Map from './components/Map';
+import VehicleStatus from './components/VehicleStatus';
 
 const Dashboard = () => {
   return (

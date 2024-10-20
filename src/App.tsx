@@ -1,7 +1,7 @@
-import { useState } from "react";
-import Sidebar from "./ui/components/Sidebar";
-import { BrowserRouter as Router } from "react-router-dom";
-import Routes from "./routes/Routes";
+import { useState } from 'react';
+import Sidebar from './ui/components/Sidebar';
+import { BrowserRouter as Router } from 'react-router-dom';
+import Routes from './routes/Routes';
 
 const App = () => {
   const [sidebarOpen, setSidebarOpen] = useState(true);
