@@ -12,15 +12,6 @@
     "preview": "vite preview",
     "prepare": "husky"
   },
-  "lint-staged": {
-    "*.{ts,tsx}": [
-      "eslint --fix",
-      "prettier --write"
-    ],
-    "*.{js,jsx,json,css,scss,md}": [
-      "prettier --write"
-    ]
-  },
   "dependencies": {
     "leaflet": "^1.9.4",
     "lucide-react": "^0.451.0",
