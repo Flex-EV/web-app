@@ -1,6 +1,6 @@
 import { MapContainer, TileLayer, Marker } from "react-leaflet";
 
-export const Map = () => {
+const Map = () => {
   return (
     <div style={{ height: "100%", width: "100%" }}>
       <MapContainer
@@ -17,3 +17,5 @@ export const Map = () => {
     </div>
   );
 };
+
+export default Map;

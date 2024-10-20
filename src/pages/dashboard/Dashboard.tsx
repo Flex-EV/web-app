@@ -1,6 +1,6 @@
-import { Header } from "./Header";
-import { Map } from "./Map";
-import { VehicleStatus } from "./VehicleStatus";
+import Header from "@/ui/components/Header";
+import Map from "./components/Map";
+import VehicleStatus from "./components/VehicleStatus";
 
 export const Dashboard = () => {
   return (

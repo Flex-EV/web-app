@@ -1,29 +1,9 @@
-import {
-  LayoutDashboard,
-  Users,
-  Truck,
-  FileText,
-  Wrench,
-  Menu,
-  IndianRupee,
-} from "lucide-react";
+import { Menu } from "lucide-react";
 import { Link } from "react-router-dom";
+import { MENU_ITEMS } from "../data/Sidebar.data";
+import { SidebarProps } from "../model/Sidebar.interface";
 
-interface SidebarProps {
-  isOpen: boolean;
-  toggleSidebar: () => void;
-}
-
-export const Sidebar = ({ isOpen, toggleSidebar }: SidebarProps) => {
-  const menuItems = [
-    { name: "Dashboard", icon: LayoutDashboard, path: "/" },
-    { name: "Rider Management", icon: Users, path: "/rider-management" },
-    { name: "Vehicle Management", icon: Truck, path: "/vehicle-management" },
-    { name: "Earning Details", icon: IndianRupee, path: "/earning-details" },
-    { name: "Reports", icon: FileText, path: "/reports" },
-    { name: "Service Request", icon: Wrench, path: "/service-request" },
-  ];
-
+const Sidebar = ({ isOpen, toggleSidebar }: SidebarProps) => {
   return (
     <div
       className={`${
@@ -34,7 +14,7 @@ export const Sidebar = ({ isOpen, toggleSidebar }: SidebarProps) => {
         {isOpen && (
           <img
             className="p-1"
-            src="src\assets\Flex-Logo.jpeg"
+            src="src/assets/flex-logo.jpeg"
             width={50}
             height={40}
           />
@@ -49,7 +29,7 @@ export const Sidebar = ({ isOpen, toggleSidebar }: SidebarProps) => {
       </div>
       <nav className="flex-1 mt-6">
         <ul className="space-y-3 overflow-hidden">
-          {menuItems.map((item, index) => (
+          {MENU_ITEMS.map((item, index) => (
             <li key={index}>
               <Link
                 to={item.path}
@@ -67,3 +47,5 @@ export const Sidebar = ({ isOpen, toggleSidebar }: SidebarProps) => {
     </div>
   );
 };
+
+export default Sidebar;

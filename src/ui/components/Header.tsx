@@ -1,4 +1,4 @@
-export const Header = () => {
+const Header = () => {
   return (
     <header className="flex items-center justify-between">
       <div>
@@ -19,3 +19,5 @@ export const Header = () => {
     </header>
   );
 };
+
+export default Header;
