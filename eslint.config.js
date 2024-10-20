@@ -9,37 +9,8 @@ import typescriptEslintParser from '@typescript-eslint/parser';
 import typescriptEslintPlugin from '@typescript-eslint/eslint-plugin';
 
 export default [
-  js.configs.recommended,
   {
     ignores: ['dist'],
-    files: ['**/*.{js,jsx}'],
-    languageOptions: {
-      ecmaVersion: 2020,
-      globals: globals.browser,
-    },
-    plugins: {
-      react,
-      'react-hooks': reactHooks,
-      'react-refresh': reactRefresh,
-      prettier: eslintPluginPrettier,
-    },
-    settings: {
-      react: {
-        version: 'detect',
-      },
-    },
-    rules: {
-      ...react.configs.recommended.rules,
-      ...react.configs['jsx-runtime'].rules,
-      ...reactHooks.configs.recommended.rules,
-      'react-refresh/only-export-components': [
-        'warn',
-        { allowConstantExport: true },
-      ],
-      'prettier/prettier': 'error',
-    },
-  },
-  {
     files: ['**/*.{ts,tsx}'],
     languageOptions: {
       parser: typescriptEslintParser,
@@ -82,5 +53,6 @@ export default [
       ],
     },
   },
+
   eslintConfigPrettier,
 ];
