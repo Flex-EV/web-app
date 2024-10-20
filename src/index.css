@@ -2,6 +2,6 @@
 @tailwind components;
 @tailwind utilities;
 
-body{
-    @apply bg-neutral-950 font-poppins;
+body {
+  @apply bg-neutral-950 font-poppins;
 }
