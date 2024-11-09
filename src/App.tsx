@@ -1,20 +1,24 @@
-import { useState } from 'react';
 import Sidebar from './ui/components/Sidebar';
 import { BrowserRouter as Router } from 'react-router-dom';
 import Routes from './routes/Routes';
+import Header from './ui/components/Header';
 
 const App = () => {
-  const [sidebarOpen, setSidebarOpen] = useState(true);
-
   return (
     <Router>
-      <main className="w-full h-screen flex flex-row relative">
-        <Sidebar
-          isOpen={sidebarOpen}
-          toggleSidebar={() => setSidebarOpen(!sidebarOpen)}
-        />
-        <div className="flex-1 overflow-auto">
-          <Routes />
+      <main className="w-full h-screen flex flex-row">
+        <div className="fixed inset-0 z-0">
+          <div className="absolute inset-0 bg-gradient-to-br from-zinc-900 via-zinc-800 to-zinc-900 opacity-80" />
+          <div className="absolute inset-0 backdrop-blur-sm" />
+        </div>
+        <div className="z-10">
+          <Sidebar />
+        </div>
+        <div className="flex-1 flex flex-col z-10">
+          <Header />
+          <div className="flex-1 overflow-auto">
+            <Routes />
+          </div>
         </div>
       </main>
     </Router>
