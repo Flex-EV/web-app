@@ -1,5 +1,11 @@
+import RiderTable from './components/RiderTable';
+
 const RiderManagement = () => {
-  return <div className="text-neutral-100">Rider Management</div>;
+  return (
+    <>
+      <RiderTable />
+    </>
+  );
 };
 
 export default RiderManagement;
