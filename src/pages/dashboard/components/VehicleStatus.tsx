@@ -6,8 +6,7 @@ const VehicleStatus = () => {
       {statuses.map((status, index) => (
         <div
           key={index}
-          className={`${status.color} p-6 
-          rounded-lg text-white shadow-lg`}
+          className={`${status.color} p-6 rounded-lg text-white shadow-lg`}
         >
           <h3 className="text-lg font-semibold mb-2">{status.label}</h3>
           <p className="text-4xl font-bold">{status.count}</p>
