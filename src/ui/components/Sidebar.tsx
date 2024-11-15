@@ -28,10 +28,7 @@ const Sidebar = ({ isOpen, toggleSidebar }: SidebarProps) => {
         </button>
       </div>
       <nav className="flex-1 mt-6">
-        <ul
-          className="space-y-3 
-        overflow-hidden"
-        >
+        <ul className="space-y-3 overflow-hidden">
           {MENU_ITEMS.map((item, index) => (
             <li key={index}>
               <Link
