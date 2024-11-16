@@ -9,7 +9,7 @@ const VehicleStatus = () => {
           className={`${status.color} p-6 rounded-lg text-white shadow-lg`}
         >
           <h3 className="text-lg font-semibold mb-2">{status.label}</h3>
-          <p className="text-4xl font-bold">{status.count}</p>
+          <p className="text-5xl font-bold">{status.count} </p>
         </div>
       ))}
     </div>
