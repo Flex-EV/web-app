@@ -1,6 +1,7 @@
 import Header from '@/ui/components/Header';
 import Map from './components/Map';
 import VehicleStatus from './components/VehicleStatus';
+import RiderManagement from '../rider-management/RiderManagement';
 
 const Dashboard = () => {
   return (
