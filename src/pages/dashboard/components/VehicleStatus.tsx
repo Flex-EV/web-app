@@ -1,6 +1,7 @@
 import { statuses } from '../data/VehicleStatus.data';
 
 const VehicleStatus = () => {
+  const api_key = 'fafaf';
   return (
     <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-6">
       {statuses.map((status, index) => (
