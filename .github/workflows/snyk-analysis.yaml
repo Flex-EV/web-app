@@ -1,4 +1,4 @@
-name: Snyk Security Scan
+name: Security Scan
 
 on:
   pull_request:
@@ -21,28 +21,14 @@ jobs:
       - name: Install dependencies
         run: yarn install --frozen-lockfile
 
-      # Check dependencies for vulnerabilities
-      - name: Snyk Dependencies Security Scan
-        uses: snyk/actions/node@master
-        env:
-          SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
-        with:
-          args: --severity-threshold=high
+      # Run ESLint security checks
+      - name: Run ESLint
+        run: yarn security-lint
 
-      # Check source code for security issues
-      - name: Snyk Code Security Scan
+      # Run Snyk checks
+      - name: Snyk Security Scan
         uses: snyk/actions/node@master
         env:
           SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
         with:
-          command: code test
           args: --all-projects --severity-threshold=low
-
-      # Monitor dependencies (only on main/master branch)
-      - name: Monitor dependencies
-        if: github.event_name == 'push' && (github.ref == 'refs/heads/main' || github.ref == 'refs/heads/master')
-        uses: snyk/actions/node@master
-        env:
-          SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
-        with:
-          command: monitor
