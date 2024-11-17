@@ -1,22 +1,16 @@
 name: Snyk Security Scan
 
 on:
-  push:
-    branches: [ "master", "main" ]
   pull_request:
-    types: [opened, synchronize, reopened]
+    branches: [ "master", "main" ]
+  push:
     branches: [ "master", "main" ]
 
 jobs:
   security:
     runs-on: ubuntu-latest
-    permissions:
-      contents: read
-      pull-requests: write  # Needed for PR comments
     steps:
       - uses: actions/checkout@v4
-        with:
-          fetch-depth: 0  # Required for PR scans
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
@@ -27,24 +21,16 @@ jobs:
       - name: Install dependencies
         run: yarn install --frozen-lockfile
 
-      - name: Run Snyk to check for vulnerabilities
+      # Check for vulnerabilities
+      - name: Snyk Security Scan
         uses: snyk/actions/node@master
         env:
           SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
         with:
-          args: --severity-threshold=high --pr-checks=true --json > snyk-results.json
-          command: test
+          args: --severity-threshold=high
 
-      # Add PR comment with Snyk results
-      - name: Post Snyk results as PR comment
-        if: github.event_name == 'pull_request'
-        uses: snyk/actions/github-pr-check@master
-        env:
-          SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      
-      # Monitor dependencies in Snyk (only on main/master branch)
-      - name: Run Snyk monitor
+      # Monitor dependencies (only on main/master branch)
+      - name: Monitor dependencies
         if: github.event_name == 'push' && (github.ref == 'refs/heads/main' || github.ref == 'refs/heads/master')
         uses: snyk/actions/node@master
         env:
