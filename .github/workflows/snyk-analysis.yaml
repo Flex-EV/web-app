@@ -1,25 +1,11 @@
-name: Security Scan
-
-on:
-  pull_request:
-    branches: [ "master", "main" ]
-  push:
-    branches: [ "master", "main" ]
-
+name: Example workflow for Node using Snyk
+on: push
 jobs:
   security:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-
-    #   # Run ESLint security checks
-    #   - name: Run ESLint
-    #     run: yarn security-lint
-
-      # Run Snyk checks
-      - name: Snyk Security Scan
+      - uses: actions/checkout@master
+      - name: Run Snyk to check for vulnerabilities
         uses: snyk/actions/node@master
         env:
           SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
-        with:
-          args: --all-projects --severity-threshold=low
