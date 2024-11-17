@@ -1,4 +1,4 @@
-name: Snyk Vulnerability Scan
+name: snyk-vulnerability-scan
 
 on:
   pull_request:
