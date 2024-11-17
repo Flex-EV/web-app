@@ -21,12 +21,21 @@ jobs:
       - name: Install dependencies
         run: yarn install --frozen-lockfile
 
-      # Check for vulnerabilities
-      - name: Snyk Security Scan
+      # Check dependencies for vulnerabilities
+      - name: Snyk Dependencies Security Scan
         uses: snyk/actions/node@master
         env:
           SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
         with:
+          args: --severity-threshold=high
+
+      # Check source code for security issues
+      - name: Snyk Code Security Scan
+        uses: snyk/actions/node@master
+        env:
+          SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
+        with:
+          command: code test
           args: --severity-threshold=high
 
       # Monitor dependencies (only on main/master branch)
