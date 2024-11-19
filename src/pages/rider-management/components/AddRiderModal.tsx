@@ -132,7 +132,7 @@ const AddRiderModal = ({ isOpen, onClose }: AddRiderModalProps) => {
           {step === 3 && <>Add Rider Documents</>}
         </h2>
 
-        <form onSubmit={handleSubmit} className="grid grid-cols-2 gap-4">
+        <form onSubmit={handleNext} className="grid grid-cols-2 gap-4">
           {step === 1 && (
             <>
               <FlexTextInput
@@ -165,14 +165,21 @@ const AddRiderModal = ({ isOpen, onClose }: AddRiderModalProps) => {
                 required
                 value={riderData.email}
               />
-              <FlexTextInput
-                label="Phone Number"
-                type="text"
-                name="phoneNumber"
-                onChange={handleInputChange}
-                required
-                value={riderData.phoneNumber}
-              />
+              <div>
+                <h1 className="block text-sm font-medium text-gray-300 mb-1">
+                  Phone Number
+                </h1>
+                <input
+                  type="text"
+                  value={riderData.phoneNumber}
+                  required
+                  name="phoneNumber"
+                  onChange={handleInputChange}
+                  pattern="[0-9]{10}"
+                  title="Please enter a valid 10 digit phone number"
+                  className="w-full bg-gray-700 text-white rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                />
+              </div>
               <FlexTextInput
                 label="Date of Birth"
                 type="date"
@@ -181,10 +188,9 @@ const AddRiderModal = ({ isOpen, onClose }: AddRiderModalProps) => {
                 required
                 value={riderData.dateOfBirth}
               />
-
               <div className="col-span-2 mt-6 flex justify-end gap-4">
                 <button
-                  type="button"
+                  type="submit"
                   className="bg-blue-500 hover:bg-blue-400 text-white px-6 py-2 rounded-lg"
                 >
                   Next
@@ -192,6 +198,8 @@ const AddRiderModal = ({ isOpen, onClose }: AddRiderModalProps) => {
               </div>
             </>
           )}
+        </form>
+        <form onSubmit={handleNext} className="grid grid-cols-2 gap-4">
           {step === 2 && (
             <>
               <h3 className="col-span-2 text-lg font-medium text-gray-200 mb-2">
@@ -323,8 +331,7 @@ const AddRiderModal = ({ isOpen, onClose }: AddRiderModalProps) => {
                   Back
                 </button>
                 <button
-                  type="button"
-                  onClick={handleNext}
+                  type="submit"
                   className="bg-blue-500 hover:bg-blue-400 text-white px-6 py-2 rounded-lg"
                 >
                   Next
@@ -332,6 +339,8 @@ const AddRiderModal = ({ isOpen, onClose }: AddRiderModalProps) => {
               </div>
             </>
           )}
+        </form>
+        <form onSubmit={handleSubmit} className="grid grid-cols-2 gap-4">
           {step === 3 && (
             <>
               <FlexFileInput
