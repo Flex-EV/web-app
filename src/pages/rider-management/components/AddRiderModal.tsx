@@ -1,19 +1,114 @@
 import { X } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { useState } from 'react';
-import { AddRiderModalProps } from '../model/RiderTable.interface';
+import { AddRiderModalProps, RiderData } from '../model/RiderTable.interface';
+import FlexTextInput from '@/ui/components/FlexTextInput';
+import FlexFileInput from '@/ui/components/FlexFileInput';
 
 const AddRiderModal = ({ isOpen, onClose }: AddRiderModalProps) => {
   const [step, setStep] = useState(1);
+  const [riderData, setRiderData] = useState<RiderData>({
+    firstName: '',
+    middleName: '',
+    lastName: '',
+    email: '',
+    phoneNumber: '',
+    dateOfBirth: '',
+    currentAddress: {
+      line1: '',
+      line2: '',
+      line3: '',
+      city: '',
+      state: '',
+      postalCode: '',
+      country: '',
+    },
+    permanentAddress: {
+      line1: '',
+      line2: '',
+      line3: '',
+      city: '',
+      state: '',
+      postalCode: '',
+      country: '',
+    },
+    gender: '',
+    photo: null,
+    aadhar: null,
+    pan: null,
+    drivingLicense: null,
+  });
 
   if (!isOpen) return null;
 
-  const handleNext = () => {
-    setStep(2);
+  const handleNext = (e: React.FormEvent) => {
+    e.preventDefault();
+    setStep((i) => {
+      if (i >= 3) return i;
+      return i + 1;
+    });
+  };
+  const handleBack = (e: React.FormEvent) => {
+    e.preventDefault();
+    setStep((i) => {
+      if (i <= 1) return i;
+      return i - 1;
+    });
+  };
+
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+    setRiderData((prev) => ({ ...prev, [name]: value }));
+  };
+
+  const handleAddressChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+    const [addressType, field] = name.split('.');
+
+    setRiderData((prev) => ({
+      ...prev,
+      [addressType]: {
+        ...prev[addressType as 'currentAddress' | 'permanentAddress'],
+        [field]: value,
+      },
+    }));
   };
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+    onClose();
+    setRiderData({
+      firstName: '',
+      middleName: '',
+      lastName: '',
+      email: '',
+      phoneNumber: '',
+      dateOfBirth: '',
+      currentAddress: {
+        line1: '',
+        line2: '',
+        line3: '',
+        city: '',
+        state: '',
+        postalCode: '',
+        country: '',
+      },
+      permanentAddress: {
+        line1: '',
+        line2: '',
+        line3: '',
+        city: '',
+        state: '',
+        postalCode: '',
+        country: '',
+      },
+      gender: '',
+      photo: null,
+      aadhar: null,
+      pan: null,
+      drivingLicense: null,
+    });
+    setStep(1);
   };
 
   return (
@@ -32,92 +127,200 @@ const AddRiderModal = ({ isOpen, onClose }: AddRiderModalProps) => {
         </button>
 
         <h2 className="text-xl font-semibold text-gray-100 mb-6">
-          Add New Rider
+          {step === 1 && <>Add Rider Details</>}
+          {step === 2 && <>Add Address Details</>}
+          {step === 3 && <>Add Rider Documents</>}
         </h2>
 
         <form onSubmit={handleSubmit} className="grid grid-cols-2 gap-4">
-          {step === 1 ? (
+          {step === 1 && (
             <>
-              <div>
-                <label className="block text-sm font-medium text-gray-300 mb-1">
-                  First Name
-                </label>
-                <input
+              <FlexTextInput
+                label="First Name"
+                name="firstName"
+                type="text"
+                value={riderData.firstName}
+                onChange={handleInputChange}
+                required
+              />
+              <FlexTextInput
+                label="Middle Name"
+                name="middleName"
+                type="text"
+                value={riderData.middleName}
+                onChange={handleInputChange}
+              />
+              <FlexTextInput
+                label="Last Name"
+                name="lastName"
+                type="text"
+                onChange={handleInputChange}
+                value={riderData.lastName}
+              />
+              <FlexTextInput
+                label="Email"
+                name="email"
+                type="email"
+                onChange={handleInputChange}
+                required
+                value={riderData.email}
+              />
+              <FlexTextInput
+                label="Phone Number"
+                type="text"
+                name="phoneNumber"
+                onChange={handleInputChange}
+                required
+                value={riderData.phoneNumber}
+              />
+              <FlexTextInput
+                label="Date of Birth"
+                type="date"
+                name="dateOfBirth"
+                onChange={handleInputChange}
+                required
+                value={riderData.dateOfBirth}
+              />
+
+              <div className="col-span-2 mt-6 flex justify-end gap-4">
+                <button
+                  type="button"
+                  className="bg-blue-500 hover:bg-blue-400 text-white px-6 py-2 rounded-lg"
+                >
+                  Next
+                </button>
+              </div>
+            </>
+          )}
+          {step === 2 && (
+            <>
+              <h3 className="col-span-2 text-lg font-medium text-gray-200 mb-2">
+                Current Address
+              </h3>
+              <div className="col-span-2 grid grid-cols-2 gap-4">
+                <FlexTextInput
+                  label="Address Line 1"
                   type="text"
-                  className="w-full bg-gray-700 text-white rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  value={riderData.currentAddress.line1}
+                  name="currentAddress.line1"
+                  onChange={handleAddressChange}
+                  required
                 />
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-gray-300 mb-1">
-                  Middle Name
-                </label>
-                <input
+                <FlexTextInput
+                  label="Address Line 2"
                   type="text"
-                  className="w-full bg-gray-700 text-white rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  value={riderData.currentAddress.line2}
+                  name="currentAddress.line2"
+                  onChange={handleAddressChange}
                 />
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-gray-300 mb-1">
-                  Last Name
-                </label>
-                <input
+                <FlexTextInput
+                  label="Address Line 3"
                   type="text"
-                  className="w-full bg-gray-700 text-white rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  value={riderData.currentAddress.line3}
+                  name="currentAddress.line3"
+                  onChange={handleAddressChange}
                 />
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-gray-300 mb-1">
-                  Email
-                </label>
-                <input
-                  type="email"
-                  className="w-full bg-gray-700 text-white rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                />
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-gray-300 mb-1">
-                  Phone Number
-                </label>
-                <input
-                  type="number"
-                  className="w-full bg-gray-700 text-white rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                />
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-gray-300 mb-1">
-                  Date of Birth
-                </label>
-                <input
-                  type="date"
-                  className="w-full bg-gray-700 text-white rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                />
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-gray-300 mb-1">
-                  Current Address
-                </label>
-                <input
+                <FlexTextInput
+                  label="City"
                   type="text"
-                  className="w-full bg-gray-700 text-white rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  required
+                  value={riderData.currentAddress.city}
+                  name="currentAddress.city"
+                  onChange={handleAddressChange}
+                />
+                <FlexTextInput
+                  label="State"
+                  type="text"
+                  required
+                  value={riderData.currentAddress.state}
+                  name="currentAddress.state"
+                  onChange={handleAddressChange}
+                />
+                <FlexTextInput
+                  label="Pin Code"
+                  type="text"
+                  required
+                  value={riderData.currentAddress.postalCode}
+                  name="currentAddress.postalCode"
+                  onChange={handleAddressChange}
+                />
+                <FlexTextInput
+                  label="Country"
+                  type="text"
+                  required
+                  value={riderData.currentAddress.country}
+                  name="currentAddress.country"
+                  onChange={handleAddressChange}
                 />
               </div>
-              <div>
-                <label className="block text-sm font-medium text-gray-300 mb-1">
-                  Permanent Address
-                </label>
-                <input
+
+              <h3 className="col-span-2 text-lg font-medium text-gray-200 mt-6 mb-2">
+                Permanent Address
+              </h3>
+              <div className="col-span-2 grid grid-cols-2 gap-4">
+                <FlexTextInput
+                  label="Address Line 1"
                   type="text"
-                  className="w-full bg-gray-700 text-white rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  required
+                  value={riderData.permanentAddress.line1}
+                  name="permanentAddress.line1"
+                  onChange={handleAddressChange}
+                />
+                <FlexTextInput
+                  label="Address Line 2"
+                  type="text"
+                  value={riderData.permanentAddress.line2}
+                  name="permanentAddress.line2"
+                  onChange={handleAddressChange}
+                />
+                <FlexTextInput
+                  label="Address Line 3"
+                  type="text"
+                  value={riderData.permanentAddress.line3}
+                  name="permanentAddress.line3"
+                  onChange={handleAddressChange}
+                />
+                <FlexTextInput
+                  label="City"
+                  type="text"
+                  required
+                  value={riderData.permanentAddress.city}
+                  name="permanentAddress.city"
+                  onChange={handleAddressChange}
+                />
+                <FlexTextInput
+                  label="State"
+                  type="text"
+                  required
+                  value={riderData.permanentAddress.state}
+                  name="permanentAddress.state"
+                  onChange={handleAddressChange}
+                />
+                <FlexTextInput
+                  label="Pin Code"
+                  type="text"
+                  required
+                  value={riderData.permanentAddress.postalCode}
+                  name="permanentAddress.postalCode"
+                  onChange={handleAddressChange}
+                />
+                <FlexTextInput
+                  label="Country"
+                  type="text"
+                  required
+                  value={riderData.permanentAddress.country}
+                  name="permanentAddress.country"
+                  onChange={handleAddressChange}
                 />
               </div>
 
               <div className="col-span-2 mt-6 flex justify-end gap-4">
                 <button
                   type="button"
-                  onClick={onClose}
+                  onClick={handleBack}
                   className="px-4 py-2 text-gray-300 hover:text-white"
                 >
-                  Cancel
+                  Back
                 </button>
                 <button
                   type="button"
@@ -128,57 +331,33 @@ const AddRiderModal = ({ isOpen, onClose }: AddRiderModalProps) => {
                 </button>
               </div>
             </>
-          ) : (
+          )}
+          {step === 3 && (
             <>
-              <div className="col-span-2">
-                <label className="block text-sm font-medium text-gray-300 mb-1">
-                  Upload Photo
-                </label>
-                <div className="border-2 border-dashed border-gray-600 rounded-lg p-4">
-                  <input type="file" className="w-full text-gray-300" />
-                </div>
-              </div>
-              <div className="col-span-2">
-                <label className="block text-sm font-medium text-gray-300 mb-1">
-                  Upload Aadhar Card
-                </label>
-                <div className="border-2 border-dashed border-gray-600 rounded-lg p-4">
-                  <input
-                    type="file"
-                    accept=".pdf,.doc,.docx"
-                    className="w-full text-gray-300"
-                  />
-                </div>
-              </div>
-              <div className="col-span-2">
-                <label className="block text-sm font-medium text-gray-300 mb-1">
-                  Upload PAN Card
-                </label>
-                <div className="border-2 border-dashed border-gray-600 rounded-lg p-4">
-                  <input
-                    type="file"
-                    accept=".pdf,.doc,.docx"
-                    className="w-full text-gray-300"
-                  />
-                </div>
-              </div>
-              <div className="col-span-2">
-                <label className="block text-sm font-medium text-gray-300 mb-1">
-                  Upload Driving License
-                </label>
-                <div className="border-2 border-dashed border-gray-600 rounded-lg p-4">
-                  <input
-                    type="file"
-                    accept=".pdf,.doc,.docx"
-                    className="w-full text-gray-300"
-                  />
-                </div>
-              </div>
-
+              <FlexFileInput
+                label="Upload Rider Photo"
+                type="file"
+                accept=".pdf, .png, .jpg"
+              />
+              <FlexFileInput
+                label="Upload Aadhar Card"
+                type="file"
+                accept=".pdf, .png, .jpg"
+              />
+              <FlexFileInput
+                label="Upload PAN Card"
+                type="file"
+                accept=".pdf, .png, .jpg"
+              />
+              <FlexFileInput
+                label="Upload Driving License"
+                type="file"
+                accept=".pdf, .png, .jpg"
+              />
               <div className="col-span-2 mt-6 flex justify-end gap-4">
                 <button
                   type="button"
-                  onClick={() => setStep(1)}
+                  onClick={handleBack}
                   className="px-4 py-2 text-gray-300 hover:text-white"
                 >
                   Back
