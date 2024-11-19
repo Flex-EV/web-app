@@ -111,10 +111,10 @@ const RiderTable = () => {
                   {rider.email}
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-300">
-                  {rider.phone}
+                  {rider.phoneNumber}
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-300">
-                  {rider.dob}
+                  {rider.dateOfBirth}
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-300">
                   {rider.currentAddress}
