@@ -1,11 +1,7 @@
-import RiderTable from './components/RiderTable';
+import Riders from './components/Riders';
 
 const RiderManagement = () => {
-  return (
-    <>
-      <RiderTable />
-    </>
-  );
+  return <Riders />;
 };
 
 export default RiderManagement;

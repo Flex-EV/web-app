@@ -2,9 +2,9 @@ import { motion } from 'framer-motion';
 import { Search, UserRoundPlus } from 'lucide-react';
 import { useState } from 'react';
 import { RIDER_DETAILS, TABLE_ITEMS } from '../data/RiderTable.data';
-import AddRiderModal from './AddRiderModal';
+import AddRider from './AddRider';
 
-const RiderTable = () => {
+const Riders = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [filteredRiders, setFilteredRiders] = useState(RIDER_DETAILS);
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -28,10 +28,7 @@ const RiderTable = () => {
       animate={{ opacity: 1, y: 0 }}
       transition={{ delay: 0.2 }}
     >
-      <AddRiderModal
-        isOpen={isModalOpen}
-        onClose={() => setIsModalOpen(false)}
-      />
+      <AddRider isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} />
 
       <div className="flex justify-between items-center mb-6">
         <h2 className="text-xl font-semibold text-gray-100">All Riders</h2>
@@ -117,12 +114,6 @@ const RiderTable = () => {
                   {rider.dateOfBirth}
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-300">
-                  {rider.currentAddress}
-                </td>
-                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-300">
-                  {rider.permanentAddress}
-                </td>
-                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-300">
                   {rider.gender}
                 </td>
               </motion.tr>
@@ -133,4 +124,4 @@ const RiderTable = () => {
     </motion.div>
   );
 };
-export default RiderTable;
+export default Riders;
