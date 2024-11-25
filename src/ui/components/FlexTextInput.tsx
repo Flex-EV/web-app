@@ -1,22 +1,15 @@
-import { ChangeEventHandler } from 'react';
-
-interface Props {
-  label: string;
-  type: string;
-  value: string;
-  name: string;
-  required?: boolean;
-  onChange: ChangeEventHandler<HTMLInputElement>;
-}
+import { TextInput } from '@/pages/rider-management/model/AddRider.interface';
 
 const FlexTextInput = ({
   label,
   type,
   value,
   name,
+  pattern,
+  disabled,
   onChange,
   required = false,
-}: Props) => {
+}: TextInput) => {
   return (
     <div>
       <label className="block text-sm font-medium text-gray-300 mb-1">
@@ -28,6 +21,8 @@ const FlexTextInput = ({
         value={value}
         required={required}
         name={name}
+        pattern={pattern}
+        disabled={disabled}
         onChange={onChange}
         className="w-full bg-gray-700 text-white rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
       />

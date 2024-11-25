@@ -1,3 +1,4 @@
+import { Gender } from '../enum/Gender.enum';
 import { RiderDetails } from '../model/RiderTable.interface';
 
 export const TABLE_ITEMS = [
@@ -34,16 +35,6 @@ export const TABLE_ITEMS = [
       new Date(row.dateOfBirth).toLocaleDateString(),
   },
   {
-    label: 'Current Address',
-    field: 'currentAddress',
-    width: '25%',
-  },
-  {
-    label: 'Permanent Address',
-    field: 'permanentAddress',
-    width: '25%',
-  },
-  {
     label: 'Gender',
     field: 'gender',
     width: '25%',
@@ -58,9 +49,7 @@ export const RIDER_DETAILS: RiderDetails[] = [
     email: 'Maurine2@hotmail.com',
     phoneNumber: '1-335-224-3752 x6540',
     dateOfBirth: '1994-07-17',
-    currentAddress: 'Suite 548',
-    permanentAddress: 'Suite 045',
-    gender: 'Neutrois',
+    gender: Gender.Other,
     id: '1',
   },
   {
@@ -70,9 +59,8 @@ export const RIDER_DETAILS: RiderDetails[] = [
     email: 'Camden53@yahoo.com',
     phoneNumber: '1-394-387-9429 x962',
     dateOfBirth: '1959-05-04',
-    currentAddress: 'Apt. 512',
-    permanentAddress: 'Apt. 834',
-    gender: 'Neither',
+
+    gender: Gender.Female,
     id: '2',
   },
   {
@@ -82,9 +70,8 @@ export const RIDER_DETAILS: RiderDetails[] = [
     email: 'Karelle71@hotmail.com',
     phoneNumber: '1-671-981-6138',
     dateOfBirth: '1944-02-03',
-    currentAddress: 'Suite 411',
-    permanentAddress: 'Suite 859',
-    gender: 'Trans male',
+
+    gender: Gender.Male,
     id: '3',
   },
   {
@@ -94,9 +81,8 @@ export const RIDER_DETAILS: RiderDetails[] = [
     email: 'Hertha22@hotmail.com',
     phoneNumber: '384.833.9073',
     dateOfBirth: '1987-07-22',
-    currentAddress: 'Suite 154',
-    permanentAddress: 'Apt. 129',
-    gender: 'Multigender',
+
+    gender: Gender.Male,
     id: '4',
   },
   {
@@ -106,9 +92,8 @@ export const RIDER_DETAILS: RiderDetails[] = [
     email: 'Tyreek_Tillman53@gmail.com',
     phoneNumber: '1-955-799-5953 x5401',
     dateOfBirth: '1999-05-23',
-    currentAddress: 'Apt. 078',
-    permanentAddress: 'Apt. 967',
-    gender: 'Gender fluid',
+
+    gender: Gender.Female,
     id: '5',
   },
   {
@@ -118,9 +103,8 @@ export const RIDER_DETAILS: RiderDetails[] = [
     email: 'Augusta_Monahan29@gmail.com',
     phoneNumber: '973.970.2219 x099',
     dateOfBirth: '1975-01-02',
-    currentAddress: 'Apt. 099',
-    permanentAddress: 'Apt. 432',
-    gender: 'Transmasculine',
+
+    gender: Gender.Male,
     id: '6',
   },
   {
@@ -130,9 +114,8 @@ export const RIDER_DETAILS: RiderDetails[] = [
     email: 'Gerardo31@hotmail.com',
     phoneNumber: '1-692-889-7571',
     dateOfBirth: '1965-08-20',
-    currentAddress: 'Suite 606',
-    permanentAddress: 'Apt. 595',
-    gender: 'Intersex man',
+
+    gender: Gender.Male,
     id: '7',
   },
   {
@@ -142,9 +125,8 @@ export const RIDER_DETAILS: RiderDetails[] = [
     email: 'Deshawn.Wehner68@yahoo.com',
     phoneNumber: '263-560-8852 x6982',
     dateOfBirth: '1976-05-07',
-    currentAddress: 'Apt. 962',
-    permanentAddress: 'Apt. 079',
-    gender: 'Agender',
+
+    gender: Gender.Male,
     id: '8',
   },
   {
@@ -154,9 +136,8 @@ export const RIDER_DETAILS: RiderDetails[] = [
     email: 'Margot74@yahoo.com',
     phoneNumber: '(913) 423-2667 x32510',
     dateOfBirth: '1972-01-08',
-    currentAddress: 'Apt. 287',
-    permanentAddress: 'Suite 554',
-    gender: 'T* woman',
+
+    gender: Gender.Other,
     id: '9',
   },
   {
@@ -166,9 +147,8 @@ export const RIDER_DETAILS: RiderDetails[] = [
     email: 'Helmer4@gmail.com',
     phoneNumber: '1-847-290-4011',
     dateOfBirth: '1952-02-06',
-    currentAddress: 'Apt. 914',
-    permanentAddress: 'Suite 089',
-    gender: 'Transgender female',
+
+    gender: Gender.Male,
     id: '10',
   },
 ];

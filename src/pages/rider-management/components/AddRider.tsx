@@ -1,62 +1,45 @@
 import { X } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { useState } from 'react';
-import { AddRiderModalProps, RiderData } from '../model/RiderTable.interface';
 import FlexTextInput from '@/ui/components/FlexTextInput';
 import FlexFileInput from '@/ui/components/FlexFileInput';
+import {
+  MAX_STEP,
+  MIN_STEP,
+  RIDER_DATA_INITIAL_STATE,
+} from '../data/AddRider.data';
+import { AddRiderProps, RiderData } from '../model/AddRider.interface';
+import FlexButton from '@/ui/components/FlexSubmitButton';
+import { Gender } from '../enum/Gender.enum';
+import { PHONE_NUMBER_REGEX_PATTERN } from '../validation/RegexPattern';
 
-const AddRiderModal = ({ isOpen, onClose }: AddRiderModalProps) => {
+const AddRider = ({ isOpen, onClose }: AddRiderProps) => {
   const [step, setStep] = useState(1);
-  const [riderData, setRiderData] = useState<RiderData>({
-    firstName: '',
-    middleName: '',
-    lastName: '',
-    email: '',
-    phoneNumber: '',
-    dateOfBirth: '',
-    currentAddress: {
-      line1: '',
-      line2: '',
-      line3: '',
-      city: '',
-      state: '',
-      postalCode: '',
-      country: '',
-    },
-    permanentAddress: {
-      line1: '',
-      line2: '',
-      line3: '',
-      city: '',
-      state: '',
-      postalCode: '',
-      country: '',
-    },
-    gender: '',
-    photo: null,
-    aadhar: null,
-    pan: null,
-    drivingLicense: null,
-  });
+  const [check, setCheck] = useState(false);
+  const [riderData, setRiderData] = useState<RiderData>(
+    RIDER_DATA_INITIAL_STATE
+  );
 
   if (!isOpen) return null;
 
   const handleNext = (e: React.FormEvent) => {
     e.preventDefault();
     setStep((i) => {
-      if (i >= 3) return i;
-      return i + 1;
+      if (i >= MAX_STEP) return i;
+      return i + MIN_STEP;
     });
   };
   const handleBack = (e: React.FormEvent) => {
     e.preventDefault();
     setStep((i) => {
-      if (i <= 1) return i;
-      return i - 1;
+      if (i <= MIN_STEP) return i;
+      return i - MIN_STEP;
     });
   };
 
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleInputChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
+  ) => {
     const { name, value } = e.target;
     setRiderData((prev) => ({ ...prev, [name]: value }));
   };
@@ -74,40 +57,44 @@ const AddRiderModal = ({ isOpen, onClose }: AddRiderModalProps) => {
     }));
   };
 
+  const handleFileChange = (
+    e: React.ChangeEvent<HTMLInputElement>,
+    fieldName: 'photo' | 'aadhar' | 'pan' | 'dl'
+  ) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      setRiderData((prev) => ({ ...prev, [fieldName]: file }));
+    }
+  };
+
+  const handleCheckChange = () => {
+    const newCheckState = !check;
+    setCheck(newCheckState);
+
+    if (newCheckState) {
+      setRiderData((prev) => ({
+        ...prev,
+        permanentAddress: {
+          ...prev.currentAddress,
+        },
+      }));
+    }
+  };
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     onClose();
-    setRiderData({
-      firstName: '',
-      middleName: '',
-      lastName: '',
-      email: '',
-      phoneNumber: '',
-      dateOfBirth: '',
-      currentAddress: {
-        line1: '',
-        line2: '',
-        line3: '',
-        city: '',
-        state: '',
-        postalCode: '',
-        country: '',
-      },
-      permanentAddress: {
-        line1: '',
-        line2: '',
-        line3: '',
-        city: '',
-        state: '',
-        postalCode: '',
-        country: '',
-      },
-      gender: '',
-      photo: null,
-      aadhar: null,
-      pan: null,
-      drivingLicense: null,
-    });
+    setRiderData(RIDER_DATA_INITIAL_STATE);
+    setCheck(false);
+    setStep(1);
+    alert('Data Submitted');
+    console.log(riderData);
+  };
+  const handleClose = (e: React.FormEvent) => {
+    e.preventDefault();
+    onClose();
+    setRiderData(RIDER_DATA_INITIAL_STATE);
+    setCheck(false);
     setStep(1);
   };
 
@@ -120,7 +107,7 @@ const AddRiderModal = ({ isOpen, onClose }: AddRiderModalProps) => {
         className="bg-gray-800 rounded-xl p-6 w-full max-w-2xl mx-4 relative border border-gray-700"
       >
         <button
-          onClick={onClose}
+          onClick={handleClose}
           className="absolute right-4 top-4 text-gray-400 hover:text-white"
         >
           <X size={24} />
@@ -165,21 +152,16 @@ const AddRiderModal = ({ isOpen, onClose }: AddRiderModalProps) => {
                 required
                 value={riderData.email}
               />
-              <div>
-                <h1 className="block text-sm font-medium text-gray-300 mb-1">
-                  Phone Number
-                </h1>
-                <input
-                  type="text"
-                  value={riderData.phoneNumber}
-                  required
-                  name="phoneNumber"
-                  onChange={handleInputChange}
-                  pattern="[0-9]{10}"
-                  title="Please enter a valid 10 digit phone number"
-                  className="w-full bg-gray-700 text-white rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                />
-              </div>
+              <FlexTextInput
+                label="Phone Number"
+                name="phoneNumber"
+                type="phoneNumber"
+                pattern={PHONE_NUMBER_REGEX_PATTERN}
+                onChange={handleInputChange}
+                required
+                value={riderData.phoneNumber}
+              />
+
               <FlexTextInput
                 label="Date of Birth"
                 type="date"
@@ -188,13 +170,30 @@ const AddRiderModal = ({ isOpen, onClose }: AddRiderModalProps) => {
                 required
                 value={riderData.dateOfBirth}
               />
-              <div className="col-span-2 mt-6 flex justify-end gap-4">
-                <button
-                  type="submit"
-                  className="bg-blue-500 hover:bg-blue-400 text-white px-6 py-2 rounded-lg"
+
+              <div>
+                <label
+                  htmlFor="gender"
+                  className="block text-sm font-medium text-gray-300 mb-1"
                 >
-                  Next
-                </button>
+                  Gender
+                </label>
+                <select
+                  id="gender"
+                  name="gender"
+                  value={riderData.gender}
+                  onChange={handleInputChange}
+                  required
+                  className="w-full bg-gray-700 text-white rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                >
+                  <option value={Gender.Male}>Male</option>
+                  <option value={Gender.Female}>Female</option>
+                  <option value={Gender.Other}>Other</option>
+                </select>
+              </div>
+
+              <div className="col-span-2 mt-6 flex justify-end gap-4">
+                <FlexButton type="submit" variant="primary" text="Next" />
               </div>
             </>
           )}
@@ -261,22 +260,41 @@ const AddRiderModal = ({ isOpen, onClose }: AddRiderModalProps) => {
                   onChange={handleAddressChange}
                 />
               </div>
+              <div className="col-span-2 flex items-center gap-4 mt-6 mb-2">
+                <h3 className="text-lg font-medium text-gray-200">
+                  Permanent Address
+                </h3>
+                <div className="flex items-center gap-2 ml-32">
+                  <input
+                    className="w-4 h-4"
+                    type="checkbox"
+                    value="checkbox"
+                    name="checkbox"
+                    onChange={handleCheckChange}
+                  />
+                  <label
+                    htmlFor="checkbox"
+                    className="text-lg font-medium text-gray-200"
+                  >
+                    Same as Current Address
+                  </label>
+                </div>
+              </div>
 
-              <h3 className="col-span-2 text-lg font-medium text-gray-200 mt-6 mb-2">
-                Permanent Address
-              </h3>
               <div className="col-span-2 grid grid-cols-2 gap-4">
                 <FlexTextInput
                   label="Address Line 1"
                   type="text"
                   required
+                  disabled={check}
                   value={riderData.permanentAddress.line1}
-                  name="permanentAddress.line1"
+                  name={'permanentAddress.line1'}
                   onChange={handleAddressChange}
                 />
                 <FlexTextInput
                   label="Address Line 2"
                   type="text"
+                  disabled={check}
                   value={riderData.permanentAddress.line2}
                   name="permanentAddress.line2"
                   onChange={handleAddressChange}
@@ -284,6 +302,7 @@ const AddRiderModal = ({ isOpen, onClose }: AddRiderModalProps) => {
                 <FlexTextInput
                   label="Address Line 3"
                   type="text"
+                  disabled={check}
                   value={riderData.permanentAddress.line3}
                   name="permanentAddress.line3"
                   onChange={handleAddressChange}
@@ -292,6 +311,7 @@ const AddRiderModal = ({ isOpen, onClose }: AddRiderModalProps) => {
                   label="City"
                   type="text"
                   required
+                  disabled={check}
                   value={riderData.permanentAddress.city}
                   name="permanentAddress.city"
                   onChange={handleAddressChange}
@@ -300,6 +320,7 @@ const AddRiderModal = ({ isOpen, onClose }: AddRiderModalProps) => {
                   label="State"
                   type="text"
                   required
+                  disabled={check}
                   value={riderData.permanentAddress.state}
                   name="permanentAddress.state"
                   onChange={handleAddressChange}
@@ -308,6 +329,7 @@ const AddRiderModal = ({ isOpen, onClose }: AddRiderModalProps) => {
                   label="Pin Code"
                   type="text"
                   required
+                  disabled={check}
                   value={riderData.permanentAddress.postalCode}
                   name="permanentAddress.postalCode"
                   onChange={handleAddressChange}
@@ -316,26 +338,20 @@ const AddRiderModal = ({ isOpen, onClose }: AddRiderModalProps) => {
                   label="Country"
                   type="text"
                   required
+                  disabled={check}
                   value={riderData.permanentAddress.country}
                   name="permanentAddress.country"
                   onChange={handleAddressChange}
                 />
               </div>
-
               <div className="col-span-2 mt-6 flex justify-end gap-4">
-                <button
+                <FlexButton
                   type="button"
+                  variant="neutral"
+                  text="Back"
                   onClick={handleBack}
-                  className="px-4 py-2 text-gray-300 hover:text-white"
-                >
-                  Back
-                </button>
-                <button
-                  type="submit"
-                  className="bg-blue-500 hover:bg-blue-400 text-white px-6 py-2 rounded-lg"
-                >
-                  Next
-                </button>
+                />
+                <FlexButton type="submit" variant="primary" text="Next" />
               </div>
             </>
           )}
@@ -347,36 +363,38 @@ const AddRiderModal = ({ isOpen, onClose }: AddRiderModalProps) => {
                 label="Upload Rider Photo"
                 type="file"
                 accept=".pdf, .png, .jpg"
+                onChange={(e) => handleFileChange(e, 'photo')}
+                required
               />
               <FlexFileInput
                 label="Upload Aadhar Card"
                 type="file"
                 accept=".pdf, .png, .jpg"
+                onChange={(e) => handleFileChange(e, 'aadhar')}
+                required
               />
               <FlexFileInput
                 label="Upload PAN Card"
                 type="file"
                 accept=".pdf, .png, .jpg"
+                onChange={(e) => handleFileChange(e, 'pan')}
+                required
               />
               <FlexFileInput
                 label="Upload Driving License"
                 type="file"
                 accept=".pdf, .png, .jpg"
+                onChange={(e) => handleFileChange(e, 'dl')}
+                required
               />
               <div className="col-span-2 mt-6 flex justify-end gap-4">
-                <button
+                <FlexButton
                   type="button"
+                  variant="neutral"
+                  text="Back"
                   onClick={handleBack}
-                  className="px-4 py-2 text-gray-300 hover:text-white"
-                >
-                  Back
-                </button>
-                <button
-                  type="submit"
-                  className="bg-blue-500 hover:bg-blue-400 text-white px-6 py-2 rounded-lg"
-                >
-                  Save Rider
-                </button>
+                />
+                <FlexButton type="submit" variant="primary" text="Submit" />
               </div>
             </>
           )}
@@ -386,4 +404,4 @@ const AddRiderModal = ({ isOpen, onClose }: AddRiderModalProps) => {
   );
 };
 
-export default AddRiderModal;
+export default AddRider;
