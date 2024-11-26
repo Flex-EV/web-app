@@ -1,4 +1,4 @@
-import { FileInput } from '@/pages/rider-management/model/AddRider.interface';
+import { FileInput } from '../model/FileInput.interface';
 
 const FlexFileInput = ({
   label,

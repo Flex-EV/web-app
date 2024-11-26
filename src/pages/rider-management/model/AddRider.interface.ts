@@ -1,28 +1,18 @@
-import { ChangeEventHandler } from 'react';
 import { Gender } from '../enum/Gender.enum';
-
-export interface TextInput {
-  label: string;
-  type: string;
-  value: string;
-  name: string;
-  disabled?: boolean;
-  pattern?: string;
-  required?: boolean;
-  onChange: ChangeEventHandler<HTMLInputElement>;
-}
-
-export interface FileInput {
-  label: string;
-  type: string;
-  accept: string;
-  required?: boolean;
-  onChange: ChangeEventHandler<HTMLInputElement>;
-}
 
 export interface AddRiderProps {
   isOpen: boolean;
   onClose: () => void;
+}
+
+interface Address {
+  line1: string;
+  line2: string;
+  line3: string;
+  city: string;
+  state: string;
+  postalCode: string;
+  country: string;
 }
 
 export interface RiderData {
@@ -32,24 +22,8 @@ export interface RiderData {
   email: string;
   phoneNumber: string;
   dateOfBirth: string;
-  currentAddress: {
-    line1: string;
-    line2: string;
-    line3: string;
-    city: string;
-    state: string;
-    postalCode: string;
-    country: string;
-  };
-  permanentAddress: {
-    line1: string;
-    line2: string;
-    line3: string;
-    city: string;
-    state: string;
-    postalCode: string;
-    country: string;
-  };
+  currentAddress: Address;
+  permanentAddress: Address;
   gender: Gender;
 
   photo: File | null;

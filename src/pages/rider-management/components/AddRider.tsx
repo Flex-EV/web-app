@@ -9,7 +9,7 @@ import {
   RIDER_DATA_INITIAL_STATE,
 } from '../data/AddRider.data';
 import { AddRiderProps, RiderData } from '../model/AddRider.interface';
-import FlexButton from '@/ui/components/FlexSubmitButton';
+import FlexButton from '@/ui/components/FlexButton';
 import { Gender } from '../enum/Gender.enum';
 import { PHONE_NUMBER_REGEX_PATTERN } from '../validation/RegexPattern';
 
@@ -80,6 +80,8 @@ const AddRider = ({ isOpen, onClose }: AddRiderProps) => {
       }));
     }
   };
+
+  const today = new Date().toISOString().split('T')[0];
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -167,6 +169,7 @@ const AddRider = ({ isOpen, onClose }: AddRiderProps) => {
                 type="date"
                 name="dateOfBirth"
                 onChange={handleInputChange}
+                max={today}
                 required
                 value={riderData.dateOfBirth}
               />

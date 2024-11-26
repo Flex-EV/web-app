@@ -1,5 +1,15 @@
 import { Gender } from '../enum/Gender.enum';
 
+const RIDER_DATA_INITIAL_ADDRESS = {
+  line1: '',
+  line2: '',
+  line3: '',
+  city: '',
+  state: '',
+  postalCode: '',
+  country: '',
+};
+
 export const RIDER_DATA_INITIAL_STATE = {
   firstName: '',
   middleName: '',
@@ -7,24 +17,8 @@ export const RIDER_DATA_INITIAL_STATE = {
   email: '',
   phoneNumber: '',
   dateOfBirth: '',
-  currentAddress: {
-    line1: '',
-    line2: '',
-    line3: '',
-    city: '',
-    state: '',
-    postalCode: '',
-    country: '',
-  },
-  permanentAddress: {
-    line1: '',
-    line2: '',
-    line3: '',
-    city: '',
-    state: '',
-    postalCode: '',
-    country: '',
-  },
+  currentAddress: RIDER_DATA_INITIAL_ADDRESS,
+  permanentAddress: RIDER_DATA_INITIAL_ADDRESS,
   gender: Gender.Male,
   photo: null,
   aadhar: null,

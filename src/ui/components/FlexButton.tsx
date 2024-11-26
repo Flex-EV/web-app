@@ -1,8 +1,4 @@
-interface Button extends React.ButtonHTMLAttributes<HTMLButtonElement> {
-  type: 'submit' | 'reset' | 'button';
-  text: string;
-  variant: 'primary' | 'danger' | 'neutral';
-}
+import { Button } from '../model/Button.interface';
 
 const FlexButton = ({ text, type, variant, ...props }: Button) => {
   const baseStyles =
