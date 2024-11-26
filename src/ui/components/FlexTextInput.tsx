@@ -1,4 +1,4 @@
-import { TextInput } from '@/pages/rider-management/model/AddRider.interface';
+import { TextInput } from '../model/TextInput.interface';
 
 const FlexTextInput = ({
   label,
@@ -6,6 +6,7 @@ const FlexTextInput = ({
   value,
   name,
   pattern,
+  max,
   disabled,
   onChange,
   required = false,
@@ -21,6 +22,7 @@ const FlexTextInput = ({
         value={value}
         required={required}
         name={name}
+        max={max}
         pattern={pattern}
         disabled={disabled}
         onChange={onChange}

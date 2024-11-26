@@ -1,0 +1,13 @@
+import { ChangeEventHandler } from 'react';
+
+export interface TextInput {
+  label: string;
+  type: string;
+  value: string;
+  name: string;
+  disabled?: boolean;
+  max?: string;
+  pattern?: string;
+  required?: boolean;
+  onChange: ChangeEventHandler<HTMLInputElement>;
+}
