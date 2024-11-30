@@ -2,10 +2,12 @@ import Sidebar from './ui/components/Sidebar';
 import { BrowserRouter as Router } from 'react-router-dom';
 import Routes from './routes/Routes';
 import Header from './ui/components/Header';
+import { Toaster } from 'sonner';
 
 const App = () => {
   return (
     <Router>
+      <Toaster position="top-right" richColors />
       <main className="w-full h-screen flex flex-row">
         <div className="fixed inset-0 z-0">
           <div className="absolute inset-0 bg-gradient-to-br from-zinc-900 via-zinc-800 to-zinc-900 opacity-80" />
