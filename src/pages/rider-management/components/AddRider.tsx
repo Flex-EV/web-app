@@ -12,6 +12,7 @@ import { AddRiderProps, RiderData } from '../model/AddRider.interface';
 import FlexButton from '@/ui/components/FlexButton';
 import { Gender } from '../enum/Gender.enum';
 import { PHONE_NUMBER_REGEX_PATTERN } from '../validation/RegexPattern';
+import { toast } from 'sonner';
 
 const AddRider = ({ isOpen, onClose }: AddRiderProps) => {
   const [step, setStep] = useState(1);
@@ -89,15 +90,6 @@ const AddRider = ({ isOpen, onClose }: AddRiderProps) => {
     setRiderData(RIDER_DATA_INITIAL_STATE);
     setCheck(false);
     setStep(1);
-    alert('Data Submitted');
-    console.log(riderData);
-  };
-  const handleClose = (e: React.FormEvent) => {
-    e.preventDefault();
-    onClose();
-    setRiderData(RIDER_DATA_INITIAL_STATE);
-    setCheck(false);
-    setStep(1);
   };
 
   return (
@@ -109,7 +101,7 @@ const AddRider = ({ isOpen, onClose }: AddRiderProps) => {
         className="bg-gray-800 rounded-xl p-6 w-full max-w-2xl mx-4 relative border border-gray-700"
       >
         <button
-          onClick={handleClose}
+          onClick={handleSubmit}
           className="absolute right-4 top-4 text-gray-400 hover:text-white"
         >
           <X size={24} />
@@ -397,7 +389,12 @@ const AddRider = ({ isOpen, onClose }: AddRiderProps) => {
                   text="Back"
                   onClick={handleBack}
                 />
-                <FlexButton type="submit" variant="primary" text="Submit" />
+                <FlexButton
+                  type="submit"
+                  variant="primary"
+                  text="Submit"
+                  onClick={() => toast.success('Rider Added Successfully')}
+                />
               </div>
             </>
           )}
