@@ -5,8 +5,3 @@ export interface MenuItem {
   icon: LucideIcon;
   path: string;
 }
-
-export interface SidebarProps {
-  isOpen: boolean;
-  toggleSidebar: () => void;
-}

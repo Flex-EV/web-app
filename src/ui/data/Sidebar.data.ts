@@ -31,7 +31,7 @@ export const MENU_ITEMS: MenuItem[] = [
     path: AppRoutes.EARNING_DETAILS,
   },
   {
-    name: 'Reports',
+    name: 'Reports and Insights',
     icon: FileText,
     path: AppRoutes.REPORTS,
   },
