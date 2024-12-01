@@ -1,5 +1,7 @@
+import Riders from './components/Riders';
+
 const RiderManagement = () => {
-  return <div className="text-neutral-100">Rider Management</div>;
+  return <Riders />;
 };
 
 export default RiderManagement;
