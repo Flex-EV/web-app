@@ -10,3 +10,7 @@ jobs:
     uses: ./.github/workflows/build.yaml
     with:
       node_version: "18"
+
+  snyk-scan:
+    name: Snyk Vulnerability Scan
+    uses: ./.github/workflows/snyk-analysis.yaml
