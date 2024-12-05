@@ -10,7 +10,7 @@ jobs:
     name: Build
     uses: ./.github/workflows/build.yaml
     with:
-      node_version: "18"
+      node_version: '18'
 
   docker:
     name: Docker Build
@@ -49,7 +49,7 @@ jobs:
         env:
           ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
           ECR_REPOSITORY: ${{ secrets.ECR_REPO_NAME }}
-          IMAGE_TAG: "${{ env.commit_hash }}-${{ env.timestamp }}"
+          IMAGE_TAG: '${{ env.commit_hash }}-${{ env.timestamp }}'
         run: |
           docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG .
           docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
@@ -64,7 +64,7 @@ jobs:
   deploy-dev:
     name: Deploy dev
     runs-on: ubuntu-latest
-    needs: [ docker ]
+    needs: [docker]
     steps:
       - name: Checkout Code
         uses: actions/checkout@v4
