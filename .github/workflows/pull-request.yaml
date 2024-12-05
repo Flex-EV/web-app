@@ -1,0 +1,12 @@
+name: Pull Request Workflow
+
+on:
+  pull_request:
+    branches: [master]
+
+jobs:
+  build:
+    name: Build
+    uses: ./.github/workflows/build.yaml
+    with:
+      node_version: "18"
