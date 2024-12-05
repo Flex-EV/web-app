@@ -10,7 +10,7 @@ jobs:
     name: Build
     uses: ./.github/workflows/build.yaml
     with:
-      node_version: "18"
+      node_version: '18'
 
   docker:
     name: Docker Build
@@ -41,11 +41,15 @@ jobs:
         id: commit-hash
         run: echo "commit_hash=$(git rev-parse --short HEAD)" >> $GITHUB_ENV
 
+      - name: Get Timestamp
+        id: timestamp
+        run: echo "timestamp=$(date +'%Y-%m-%d-%H-%M')" >> $GITHUB_ENV
+
       - name: Build, Tag, and Push Docker Image
         env:
           ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
           ECR_REPOSITORY: ${{ secrets.ECR_REPO_NAME }}
-          IMAGE_TAG: "${{ env.commit_hash }}"
+          IMAGE_TAG: '${{ env.commit_hash }}-${{ env.timestamp }}'
         run: |
           docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG .
           docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
@@ -56,3 +60,45 @@ jobs:
         with:
           name: image-uri
           path: image-uri.txt
+
+  deploy-dev:
+    name: Deploy dev
+    runs-on: ubuntu-latest
+    needs: [docker]
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Download Image URI Artifact
+        uses: actions/download-artifact@v3
+        with:
+          name: image-uri
+          path: ./image-uri
+
+      - name: Read Image URI
+        id: read-image-uri
+        run: |
+          IMAGE_URI=$(cat ./image-uri/image-uri.txt)
+          echo "IMAGE_URI=$IMAGE_URI" >> $GITHUB_ENV
+
+      - name: Configure AWS Credentials for ECS
+        uses: aws-actions/configure-aws-credentials@v2
+        with:
+          aws-access-key-id: ${{ secrets.AWS_DEV_ECS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_DEV_ECS_SECRET_ACCESS_KEY }}
+          aws-region: ap-south-1
+
+      - name: Fill in the new image ID in the Amazon ECS task definition
+        id: task-def
+        uses: aws-actions/amazon-ecs-render-task-definition@v1
+        with:
+          task-definition: .aws/dev-ecs-task-definition.json
+          container-name: web-app
+          image: ${{ env.IMAGE_URI }}
+
+      - name: Deploy to ECS
+        uses: aws-actions/amazon-ecs-deploy-task-definition@v2
+        with:
+          task-definition: ${{ steps.task-def.outputs.task-definition }}
+          service: web-app
+          cluster: dev_web-app
