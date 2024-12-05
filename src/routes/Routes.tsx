@@ -8,7 +8,7 @@ import ServiceRequest from '@/pages/service-request/ServiceRequest';
 import Dashboard from '@/pages/dashboard/Dashboard';
 
 const Routes = () => {
-  const routes = useRoutes([
+  return useRoutes([
     {
       path: AppRoutes.DASHBOARD,
       element: <Dashboard />,
@@ -34,8 +34,6 @@ const Routes = () => {
       element: <ServiceRequest />,
     },
   ]);
-
-  return routes;
 };
 
 export default Routes;
