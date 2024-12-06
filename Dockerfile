@@ -8,7 +8,7 @@ RUN yarn install
 COPY . .
 RUN yarn build
 
-FROM nginx:alphine
+FROM nginx:alpine
 
 RUN rm /etc/nginx/conf.d/*
 
