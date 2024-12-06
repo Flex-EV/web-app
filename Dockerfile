@@ -8,7 +8,11 @@ RUN yarn install
 COPY . .
 RUN yarn build
 
-FROM nginx:1.21
+FROM nginx:alphine
+
+RUN rm /etc/nginx/conf.d/*
+
+COPY nginx.conf /etc/nginx/conf.d/
 
 COPY --from=build /app/dist /usr/share/nginx/html
 
