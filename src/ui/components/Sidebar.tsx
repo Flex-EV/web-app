@@ -15,7 +15,7 @@ const Sidebar = () => {
         {isSidebarOpen && (
           <img
             className="p-1"
-            src="src/assets/flex-logo.jpeg"
+            src="src/assets/flex_logo.jpeg"
             width={50}
             height={40}
           />
