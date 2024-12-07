@@ -2,6 +2,7 @@ import { Menu } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { MENU_ITEMS } from '../data/Sidebar.data';
 import { useState } from 'react';
+import flexLogo from '@/assets/flex_logo.jpeg';
 
 const Sidebar = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
@@ -13,12 +14,7 @@ const Sidebar = () => {
     >
       <div className="p-4 flex items-center mb-6 mt-6 overflow-hidden">
         {isSidebarOpen && (
-          <img
-            className="p-1"
-            src="src/assets/flex-logo.jpeg"
-            width={50}
-            height={40}
-          />
+          <img className="p-1" src={flexLogo} width={50} height={40} />
         )}
         {isSidebarOpen && (
           <h1 className="p-1 text-xl font-semibold">Flex-Fleet</h1>
