@@ -35,3 +35,9 @@ export interface RiderFilterRequest {
   email?: string;
   phoneNumber?: string;
 }
+
+export interface GetRidersResponse {
+  data: {
+    riders: Riders;
+  };
+}

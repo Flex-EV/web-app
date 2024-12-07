@@ -23,7 +23,7 @@ const FlexButton = ({
       {...props}
     >
       {loading ? (
-        <div className="animate-spin border-2 border-t-transparent border-white rounded-full w-4 h-4"></div>
+        <div className="animate-spin border-2 border-t-transparent border-white rounded-full w-4 h-4" />
       ) : (
         text
       )}

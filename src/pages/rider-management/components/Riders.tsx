@@ -23,9 +23,13 @@ const Riders = () => {
     dispatch(fetchRiders({ page: 0, size: 20, filter: {} }));
   }, [dispatch]);
 
+  const closeModal = () => {
+    setIsModalOpen(false);
+  };
+
   const handleAddRiderSuccess = () => {
     dispatch(fetchRiders({ page: 0, size: 20, filter: {} }));
-    setIsModalOpen(false); // Close modal
+    closeModal();
   };
 
   const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -67,7 +71,7 @@ const Riders = () => {
     <>
       <AddRider
         isOpen={isModalOpen}
-        onClose={() => setIsModalOpen(false)}
+        onClose={closeModal}
         onSuccess={handleAddRiderSuccess}
       />
       <div className="relative">
