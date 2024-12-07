@@ -5,7 +5,7 @@ import { RIDERS_TABLE_HEADERS } from '../data/Riders.data';
 import AddRider from './AddRider';
 import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch, RootState } from '@/store/store.ts';
-import { fetchRiders } from '@/pages/rider-management/riderManagementSlice.ts';
+import { fetchRiders } from '@/pages/rider-management/RiderManagementSlice.ts';
 import { Rider } from '@/pages/rider-management/model/Riders.interface.ts';
 import FlexLoader from '@/ui/components/FlexLoader.tsx';
 
@@ -20,8 +20,17 @@ const Riders = () => {
   const [filteredRiders, setFilteredRiders] = useState<Rider[]>([]);
 
   useEffect(() => {
-    dispatch(fetchRiders({ page: 0, size: 10, filter: {} }));
+    dispatch(fetchRiders({ page: 0, size: 20, filter: {} }));
   }, [dispatch]);
+
+  const closeModal = () => {
+    setIsModalOpen(false);
+  };
+
+  const handleAddRiderSuccess = () => {
+    dispatch(fetchRiders({ page: 0, size: 20, filter: {} }));
+    closeModal();
+  };
 
   const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
     const term = e.target.value.toLowerCase();
@@ -60,7 +69,11 @@ const Riders = () => {
 
   return (
     <>
-      <AddRider isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} />
+      <AddRider
+        isOpen={isModalOpen}
+        onClose={closeModal}
+        onSuccess={handleAddRiderSuccess}
+      />
       <div className="relative">
         <button
           onClick={() => setIsModalOpen(true)}

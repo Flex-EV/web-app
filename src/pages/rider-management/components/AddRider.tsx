@@ -1,23 +1,33 @@
 import { X } from 'lucide-react';
 import { motion } from 'framer-motion';
-import { useState } from 'react';
+import React, { useState } from 'react';
 import FlexTextInput from '@/ui/components/FlexTextInput';
 import FlexFileInput from '@/ui/components/FlexFileInput';
+import FlexButton from '@/ui/components/FlexButton';
 import {
   MAX_STEP,
   MIN_STEP,
+  RIDER_DATA_INITIAL_ADDRESS,
   RIDER_DATA_INITIAL_STATE,
 } from '../data/AddRider.data';
-import { AddRiderProps, RiderData } from '../model/AddRider.interface';
-import FlexButton from '@/ui/components/FlexButton';
+import { AddRiderProps, AddRiderData } from '../model/AddRider.interface';
 import { Gender } from '../enum/Gender.enum';
 import { PHONE_NUMBER_REGEX_PATTERN } from '../validation/RegexPattern';
 import { toast } from 'sonner';
+import { useDispatch, useSelector } from 'react-redux';
+import { AppDispatch, RootState } from '@/store/store.ts';
+import { addRider } from '@/pages/rider-management/RiderManagementSlice.ts';
 
-const AddRider = ({ isOpen, onClose }: AddRiderProps) => {
+const AddRider = ({ isOpen, onClose, onSuccess }: AddRiderProps) => {
+  const dispatch = useDispatch<AppDispatch>();
+
+  const { isCreatingRider } = useSelector(
+    (state: RootState) => state.riderManagement
+  );
+
   const [step, setStep] = useState(1);
   const [check, setCheck] = useState(false);
-  const [riderData, setRiderData] = useState<RiderData>(
+  const [riderData, setRiderData] = useState<AddRiderData>(
     RIDER_DATA_INITIAL_STATE
   );
 
@@ -25,24 +35,26 @@ const AddRider = ({ isOpen, onClose }: AddRiderProps) => {
 
   const handleNext = (e: React.FormEvent) => {
     e.preventDefault();
-    setStep((i) => {
-      if (i >= MAX_STEP) return i;
-      return i + MIN_STEP;
-    });
+    if (step < MAX_STEP) {
+      setStep((prevStep) => prevStep + MIN_STEP);
+    }
   };
+
   const handleBack = (e: React.FormEvent) => {
     e.preventDefault();
-    setStep((i) => {
-      if (i <= MIN_STEP) return i;
-      return i - MIN_STEP;
-    });
+    if (step > MIN_STEP) {
+      setStep((prevStep) => prevStep - MIN_STEP);
+    }
   };
 
   const handleInputChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
   ) => {
     const { name, value } = e.target;
-    setRiderData((prev) => ({ ...prev, [name]: value }));
+    setRiderData((prev) => ({
+      ...prev,
+      rider: { ...prev.rider, [name]: value },
+    }));
   };
 
   const handleAddressChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -51,16 +63,19 @@ const AddRider = ({ isOpen, onClose }: AddRiderProps) => {
 
     setRiderData((prev) => ({
       ...prev,
-      [addressType]: {
-        ...prev[addressType as 'currentAddress' | 'permanentAddress'],
-        [field]: value,
+      rider: {
+        ...prev.rider,
+        [addressType]: {
+          ...prev.rider[addressType as 'currentAddress' | 'permanentAddress'],
+          [field]: value,
+        },
       },
     }));
   };
 
   const handleFileChange = (
     e: React.ChangeEvent<HTMLInputElement>,
-    fieldName: 'photo' | 'aadhar' | 'pan' | 'dl'
+    fieldName: 'photo' | 'aadhaar' | 'pan' | 'drivingLicense'
   ) => {
     const file = e.target.files?.[0];
     if (file) {
@@ -71,26 +86,34 @@ const AddRider = ({ isOpen, onClose }: AddRiderProps) => {
   const handleCheckChange = () => {
     const newCheckState = !check;
     setCheck(newCheckState);
+    setRiderData((prev) => ({
+      ...prev,
+      rider: {
+        ...prev.rider,
+        permanentAddress: newCheckState
+          ? { ...prev.rider.currentAddress }
+          : RIDER_DATA_INITIAL_ADDRESS,
+      },
+    }));
+  };
 
-    if (newCheckState) {
-      setRiderData((prev) => ({
-        ...prev,
-        permanentAddress: {
-          ...prev.currentAddress,
-        },
-      }));
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    try {
+      await dispatch(addRider(riderData));
+      toast.success('Rider Added Successfully');
+
+      setRiderData(RIDER_DATA_INITIAL_STATE);
+      setCheck(false);
+      setStep(1);
+
+      onSuccess();
+    } catch (error) {
+      toast.error('Failed to Add Rider. Please try again.');
     }
   };
 
   const today = new Date().toISOString().split('T')[0];
-
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    onClose();
-    setRiderData(RIDER_DATA_INITIAL_STATE);
-    setCheck(false);
-    setStep(1);
-  };
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
@@ -101,7 +124,7 @@ const AddRider = ({ isOpen, onClose }: AddRiderProps) => {
         className="bg-gray-800 rounded-xl p-6 w-full max-w-2xl mx-4 relative border border-gray-700"
       >
         <button
-          onClick={handleSubmit}
+          onClick={onClose}
           className="absolute right-4 top-4 text-gray-400 hover:text-white"
         >
           <X size={24} />
@@ -110,17 +133,21 @@ const AddRider = ({ isOpen, onClose }: AddRiderProps) => {
         <h2 className="text-xl font-semibold text-gray-100 mb-6">
           {step === 1 && <>Add Rider Details</>}
           {step === 2 && <>Add Address Details</>}
-          {step === 3 && <>Add Rider Documents</>}
+          {step === 3 && <>Add Address Details</>}
+          {step === 4 && <>Add Rider Documents</>}
         </h2>
 
-        <form onSubmit={handleNext} className="grid grid-cols-2 gap-4">
+        <form
+          onSubmit={step === MAX_STEP ? handleSubmit : handleNext}
+          className="grid grid-cols-2 gap-4"
+        >
           {step === 1 && (
             <>
               <FlexTextInput
                 label="First Name"
                 name="firstName"
                 type="text"
-                value={riderData.firstName}
+                value={riderData.rider.firstName}
                 onChange={handleInputChange}
                 required
               />
@@ -128,7 +155,7 @@ const AddRider = ({ isOpen, onClose }: AddRiderProps) => {
                 label="Middle Name"
                 name="middleName"
                 type="text"
-                value={riderData.middleName}
+                value={riderData.rider.middleName}
                 onChange={handleInputChange}
               />
               <FlexTextInput
@@ -136,7 +163,7 @@ const AddRider = ({ isOpen, onClose }: AddRiderProps) => {
                 name="lastName"
                 type="text"
                 onChange={handleInputChange}
-                value={riderData.lastName}
+                value={riderData.rider.lastName}
               />
               <FlexTextInput
                 label="Email"
@@ -144,18 +171,17 @@ const AddRider = ({ isOpen, onClose }: AddRiderProps) => {
                 type="email"
                 onChange={handleInputChange}
                 required
-                value={riderData.email}
+                value={riderData.rider.email}
               />
               <FlexTextInput
                 label="Phone Number"
                 name="phoneNumber"
-                type="phoneNumber"
+                type="tel"
                 pattern={PHONE_NUMBER_REGEX_PATTERN}
                 onChange={handleInputChange}
                 required
-                value={riderData.phoneNumber}
+                value={riderData.rider.phoneNumber}
               />
-
               <FlexTextInput
                 label="Date of Birth"
                 type="date"
@@ -163,9 +189,8 @@ const AddRider = ({ isOpen, onClose }: AddRiderProps) => {
                 onChange={handleInputChange}
                 max={today}
                 required
-                value={riderData.dateOfBirth}
+                value={riderData.rider.dateOfBirth}
               />
-
               <div>
                 <label
                   htmlFor="gender"
@@ -176,7 +201,7 @@ const AddRider = ({ isOpen, onClose }: AddRiderProps) => {
                 <select
                   id="gender"
                   name="gender"
-                  value={riderData.gender}
+                  value={riderData.rider.gender}
                   onChange={handleInputChange}
                   required
                   className="w-full bg-gray-700 text-white rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
@@ -186,14 +211,12 @@ const AddRider = ({ isOpen, onClose }: AddRiderProps) => {
                   <option value={Gender.Other}>Other</option>
                 </select>
               </div>
-
               <div className="col-span-2 mt-6 flex justify-end gap-4">
                 <FlexButton type="submit" variant="primary" text="Next" />
               </div>
             </>
           )}
-        </form>
-        <form onSubmit={handleNext} className="grid grid-cols-2 gap-4">
+
           {step === 2 && (
             <>
               <h3 className="col-span-2 text-lg font-medium text-gray-200 mb-2">
@@ -203,7 +226,7 @@ const AddRider = ({ isOpen, onClose }: AddRiderProps) => {
                 <FlexTextInput
                   label="Address Line 1"
                   type="text"
-                  value={riderData.currentAddress.line1}
+                  value={riderData.rider.currentAddress.line1}
                   name="currentAddress.line1"
                   onChange={handleAddressChange}
                   required
@@ -211,135 +234,52 @@ const AddRider = ({ isOpen, onClose }: AddRiderProps) => {
                 <FlexTextInput
                   label="Address Line 2"
                   type="text"
-                  value={riderData.currentAddress.line2}
+                  value={riderData.rider.currentAddress.line2}
                   name="currentAddress.line2"
                   onChange={handleAddressChange}
                 />
                 <FlexTextInput
                   label="Address Line 3"
                   type="text"
-                  value={riderData.currentAddress.line3}
+                  value={riderData.rider.currentAddress.line3}
                   name="currentAddress.line3"
                   onChange={handleAddressChange}
                 />
                 <FlexTextInput
                   label="City"
                   type="text"
-                  required
-                  value={riderData.currentAddress.city}
+                  value={riderData.rider.currentAddress.city}
                   name="currentAddress.city"
                   onChange={handleAddressChange}
+                  required
                 />
                 <FlexTextInput
                   label="State"
                   type="text"
-                  required
-                  value={riderData.currentAddress.state}
+                  value={riderData.rider.currentAddress.state}
                   name="currentAddress.state"
                   onChange={handleAddressChange}
-                />
-                <FlexTextInput
-                  label="Pin Code"
-                  type="text"
                   required
-                  value={riderData.currentAddress.postalCode}
-                  name="currentAddress.postalCode"
-                  onChange={handleAddressChange}
                 />
                 <FlexTextInput
                   label="Country"
                   type="text"
-                  required
-                  value={riderData.currentAddress.country}
+                  value={riderData.rider.currentAddress.country}
                   name="currentAddress.country"
                   onChange={handleAddressChange}
-                />
-              </div>
-              <div className="col-span-2 flex items-center gap-4 mt-6 mb-2">
-                <h3 className="text-lg font-medium text-gray-200">
-                  Permanent Address
-                </h3>
-                <div className="flex items-center gap-2 ml-32">
-                  <input
-                    className="w-4 h-4"
-                    type="checkbox"
-                    value="checkbox"
-                    name="checkbox"
-                    onChange={handleCheckChange}
-                  />
-                  <label
-                    htmlFor="checkbox"
-                    className="text-lg font-medium text-gray-200"
-                  >
-                    Same as Current Address
-                  </label>
-                </div>
-              </div>
-
-              <div className="col-span-2 grid grid-cols-2 gap-4">
-                <FlexTextInput
-                  label="Address Line 1"
-                  type="text"
                   required
-                  disabled={check}
-                  value={riderData.permanentAddress.line1}
-                  name={'permanentAddress.line1'}
-                  onChange={handleAddressChange}
-                />
-                <FlexTextInput
-                  label="Address Line 2"
-                  type="text"
-                  disabled={check}
-                  value={riderData.permanentAddress.line2}
-                  name="permanentAddress.line2"
-                  onChange={handleAddressChange}
-                />
-                <FlexTextInput
-                  label="Address Line 3"
-                  type="text"
-                  disabled={check}
-                  value={riderData.permanentAddress.line3}
-                  name="permanentAddress.line3"
-                  onChange={handleAddressChange}
-                />
-                <FlexTextInput
-                  label="City"
-                  type="text"
-                  required
-                  disabled={check}
-                  value={riderData.permanentAddress.city}
-                  name="permanentAddress.city"
-                  onChange={handleAddressChange}
-                />
-                <FlexTextInput
-                  label="State"
-                  type="text"
-                  required
-                  disabled={check}
-                  value={riderData.permanentAddress.state}
-                  name="permanentAddress.state"
-                  onChange={handleAddressChange}
                 />
                 <FlexTextInput
                   label="Pin Code"
                   type="text"
-                  required
-                  disabled={check}
-                  value={riderData.permanentAddress.postalCode}
-                  name="permanentAddress.postalCode"
+                  value={riderData.rider.currentAddress.postalCode}
+                  name="currentAddress.postalCode"
                   onChange={handleAddressChange}
-                />
-                <FlexTextInput
-                  label="Country"
-                  type="text"
                   required
-                  disabled={check}
-                  value={riderData.permanentAddress.country}
-                  name="permanentAddress.country"
-                  onChange={handleAddressChange}
                 />
               </div>
-              <div className="col-span-2 mt-6 flex justify-end gap-4">
+
+              <div className="col-span-2 mt-6 flex justify-between">
                 <FlexButton
                   type="button"
                   variant="neutral"
@@ -350,10 +290,136 @@ const AddRider = ({ isOpen, onClose }: AddRiderProps) => {
               </div>
             </>
           )}
-        </form>
-        <form onSubmit={handleSubmit} className="grid grid-cols-2 gap-4">
+
           {step === 3 && (
             <>
+              <div className="col-span-2 flex items-center gap-4 mt-6 mb-2">
+                <h3 className="text-lg font-medium text-gray-200">
+                  Permanent Address
+                </h3>
+                <div className="flex items-center gap-2 ml-auto">
+                  <input
+                    className="w-4 h-4"
+                    type="checkbox"
+                    checked={check}
+                    onChange={handleCheckChange}
+                    id="checkbox"
+                  />
+                  <label
+                    htmlFor="checkbox"
+                    className="text-lg font-medium text-gray-200"
+                  >
+                    Same as Current Address
+                  </label>
+                </div>
+              </div>
+              <div className="col-span-2 grid grid-cols-2 gap-4">
+                <FlexTextInput
+                  label="Address Line 1"
+                  type="text"
+                  value={
+                    check
+                      ? riderData.rider.currentAddress.line1
+                      : riderData.rider.permanentAddress.line1
+                  }
+                  name="permanentAddress.line1"
+                  onChange={handleAddressChange}
+                  required
+                  disabled={check}
+                />
+                <FlexTextInput
+                  label="Address Line 2"
+                  type="text"
+                  value={
+                    check
+                      ? riderData.rider.currentAddress.line2
+                      : riderData.rider.permanentAddress.line2
+                  }
+                  name="permanentAddress.line2"
+                  onChange={handleAddressChange}
+                  disabled={check}
+                />
+                <FlexTextInput
+                  label="Address Line 3"
+                  type="text"
+                  value={
+                    check
+                      ? riderData.rider.currentAddress.line3
+                      : riderData.rider.permanentAddress.line3
+                  }
+                  name="permanentAddress.line2"
+                  onChange={handleAddressChange}
+                  disabled={check}
+                />
+                <FlexTextInput
+                  label="City"
+                  type="text"
+                  value={
+                    check
+                      ? riderData.rider.currentAddress.city
+                      : riderData.rider.permanentAddress.city
+                  }
+                  name="permanentAddress.city"
+                  onChange={handleAddressChange}
+                  required
+                  disabled={check}
+                />
+                <FlexTextInput
+                  label="State"
+                  type="text"
+                  value={
+                    check
+                      ? riderData.rider.currentAddress.state
+                      : riderData.rider.permanentAddress.state
+                  }
+                  name="permanentAddress.state"
+                  onChange={handleAddressChange}
+                  required
+                />
+                <FlexTextInput
+                  label="Country"
+                  type="text"
+                  value={
+                    check
+                      ? riderData.rider.currentAddress.country
+                      : riderData.rider.permanentAddress.country
+                  }
+                  name="permanentAddress.country"
+                  onChange={handleAddressChange}
+                  required
+                  disabled={check}
+                />
+                <FlexTextInput
+                  label="Pin Code"
+                  type="text"
+                  value={
+                    check
+                      ? riderData.rider.currentAddress.postalCode
+                      : riderData.rider.permanentAddress.postalCode
+                  }
+                  name="permanentAddress.postalCode"
+                  onChange={handleAddressChange}
+                  required
+                  disabled={check}
+                />
+              </div>
+              <div className="col-span-2 mt-6 flex justify-between">
+                <FlexButton
+                  type="button"
+                  variant="neutral"
+                  text="Back"
+                  onClick={handleBack}
+                />
+                <FlexButton type="submit" variant="primary" text="Next" />
+              </div>
+            </>
+          )}
+
+          {step === 4 && (
+            <>
+              <h3 className="col-span-2 text-lg font-medium text-gray-200 mb-2">
+                Upload Documents
+              </h3>
               <FlexFileInput
                 label="Upload Rider Photo"
                 type="file"
@@ -365,7 +431,7 @@ const AddRider = ({ isOpen, onClose }: AddRiderProps) => {
                 label="Upload Aadhar Card"
                 type="file"
                 accept=".pdf, .png, .jpg"
-                onChange={(e) => handleFileChange(e, 'aadhar')}
+                onChange={(e) => handleFileChange(e, 'aadhaar')}
                 required
               />
               <FlexFileInput
@@ -379,10 +445,10 @@ const AddRider = ({ isOpen, onClose }: AddRiderProps) => {
                 label="Upload Driving License"
                 type="file"
                 accept=".pdf, .png, .jpg"
-                onChange={(e) => handleFileChange(e, 'dl')}
+                onChange={(e) => handleFileChange(e, 'drivingLicense')}
                 required
               />
-              <div className="col-span-2 mt-6 flex justify-end gap-4">
+              <div className="col-span-2 mt-6 flex justify-between">
                 <FlexButton
                   type="button"
                   variant="neutral"
@@ -393,7 +459,7 @@ const AddRider = ({ isOpen, onClose }: AddRiderProps) => {
                   type="submit"
                   variant="primary"
                   text="Submit"
-                  onClick={() => toast.success('Rider Added Successfully')}
+                  loading={isCreatingRider}
                 />
               </div>
             </>

@@ -1,5 +1,5 @@
 import { combineReducers } from 'redux';
-import riderManagementReducer from '../pages/rider-management/riderManagementSlice.ts';
+import riderManagementReducer from '../pages/rider-management/RiderManagementSlice.ts';
 
 const rootReducer = combineReducers({
   riderManagement: riderManagementReducer,
