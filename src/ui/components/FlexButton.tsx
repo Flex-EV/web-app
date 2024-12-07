@@ -1,6 +1,12 @@
 import { Button } from '../model/Button.interface';
 
-const FlexButton = ({ text, type, variant, ...props }: Button) => {
+const FlexButton = ({
+  text,
+  type = 'button',
+  variant,
+  loading = false,
+  ...props
+}: Button) => {
   const baseStyles =
     'px-6 py-2 rounded-lg font-medium transition-all text-white';
   const variantStyles = {
@@ -13,9 +19,14 @@ const FlexButton = ({ text, type, variant, ...props }: Button) => {
     <button
       type={type}
       className={`${baseStyles} ${variantStyles[variant]}`}
+      disabled={loading || props.disabled}
       {...props}
     >
-      {text}
+      {loading ? (
+        <div className="animate-spin border-2 border-t-transparent border-white rounded-full w-4 h-4" />
+      ) : (
+        text
+      )}
     </button>
   );
 };

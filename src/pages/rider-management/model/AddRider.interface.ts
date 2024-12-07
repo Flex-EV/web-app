@@ -1,33 +1,34 @@
-import { Gender } from '../enum/Gender.enum';
+import { Address } from '@/pages/rider-management/model/Riders.interface.ts';
+import { Gender } from '@/pages/rider-management/enum/Gender.enum.ts';
 
 export interface AddRiderProps {
   isOpen: boolean;
   onClose: () => void;
+  onSuccess: () => void;
 }
 
-interface Address {
-  line1: string;
-  line2: string;
-  line3: string;
-  city: string;
-  state: string;
-  postalCode: string;
-  country: string;
+export interface AddRiderData {
+  rider: RiderData;
+  photo: File | null;
+  aadhaar: File | null;
+  pan: File | null;
+  drivingLicense: File | null;
 }
 
-export interface RiderData {
+export interface AddRiderDataResponse {
+  data: {
+    riderId: string;
+  };
+}
+
+interface RiderData {
   firstName: string;
   middleName: string;
   lastName: string;
   email: string;
   phoneNumber: string;
   dateOfBirth: string;
+  gender: Gender;
   currentAddress: Address;
   permanentAddress: Address;
-  gender: Gender;
-
-  photo: File | null;
-  aadhar: File | null;
-  pan: File | null;
-  dl: File | null;
 }
