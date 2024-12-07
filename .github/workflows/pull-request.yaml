@@ -9,7 +9,7 @@ jobs:
     name: Build
     uses: ./.github/workflows/build.yaml
     with:
-      node_version: '18'
+      node_version: '22'
 
   snyk-scan:
     name: Snyk Vulnerability Scan

@@ -1,25 +1,62 @@
 import { motion } from 'framer-motion';
 import { Search, UserRoundPlus } from 'lucide-react';
-import { useState } from 'react';
-import { RIDER_DETAILS, TABLE_ITEMS } from '../data/Riders.data';
+import React, { useEffect, useState } from 'react';
+import { RIDERS_TABLE_HEADERS } from '../data/Riders.data';
 import AddRider from './AddRider';
+import { useDispatch, useSelector } from 'react-redux';
+import { AppDispatch, RootState } from '@/store/store.ts';
+import { fetchRiders } from '@/pages/rider-management/riderManagementSlice.ts';
+import { Rider } from '@/pages/rider-management/model/Riders.interface.ts';
+import FlexLoader from '@/ui/components/FlexLoader.tsx';
 
 const Riders = () => {
+  const dispatch = useDispatch<AppDispatch>();
+  const { fetchedRiders, isFetchingRiders, ridersFetchingError } = useSelector(
+    (state: RootState) => state.riderManagement
+  );
+
   const [searchTerm, setSearchTerm] = useState('');
-  const [filteredRiders, setFilteredRiders] = useState(RIDER_DETAILS);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [filteredRiders, setFilteredRiders] = useState<Rider[]>([]);
+
+  useEffect(() => {
+    dispatch(fetchRiders({ page: 0, size: 10, filter: {} }));
+  }, [dispatch]);
 
   const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
     const term = e.target.value.toLowerCase();
     setSearchTerm(term);
-    const filtered = RIDER_DETAILS.filter(
-      (rider) =>
-        rider.firstName.toLowerCase().includes(term) ||
-        rider.email.toLowerCase().includes(term)
-    );
-
-    setFilteredRiders(filtered);
   };
+
+  // Temporary comment-out of filtering logic
+  // useEffect(() => {
+  //   if (fetchedRiders?.riders) {
+  //     const filtered = fetchedRiders.riders.filter((rider: any) => {
+  //       const { firstName, email } = rider.rider;
+  //       return (
+  //         firstName.toLowerCase().includes(searchTerm) ||
+  //         email.toLowerCase().includes(searchTerm)
+  //       );
+  //     });
+  //     setFilteredRiders(filtered);
+  //   }
+  // }, [searchTerm, fetchedRiders]);
+
+  // Use riders data directly for now
+  useEffect(() => {
+    if (Array.isArray(fetchedRiders)) {
+      setFilteredRiders(fetchedRiders);
+    }
+  }, [fetchedRiders]);
+
+  //Temporary logic
+  if (isFetchingRiders) {
+    return <FlexLoader />;
+  }
+
+  if (ridersFetchingError) {
+    return <div>Error fetching riders: {ridersFetchingError}</div>;
+  }
 
   return (
     <>
@@ -66,19 +103,19 @@ const Riders = () => {
           <table className="min-w-full divide-y divide-gray-700">
             <thead>
               <tr className="className='px-6 py-3 text-left text-xs font-medium text-gray-400 uppercase tracking-wider">
-                {TABLE_ITEMS.map((item) => (
+                {RIDERS_TABLE_HEADERS.map((header) => (
                   <th
-                    key={item.field}
+                    key={header.field}
                     className="px-6 py-3 text-left text-xs font-medium text-gray-400 uppercase tracking-wider"
                   >
-                    {item.label}
+                    {header.label}
                   </th>
                 ))}
               </tr>
             </thead>
 
             <tbody className="divide-y divide-gray-700">
-              {filteredRiders.map((rider) => (
+              {filteredRiders.map(({ rider }) => (
                 <motion.tr
                   key={rider.id}
                   initial={{ opacity: 0 }}
