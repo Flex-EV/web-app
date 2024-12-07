@@ -1,6 +1,6 @@
 import { Gender } from '../enum/Gender.enum';
 
-interface Address {
+export interface Address {
   line1: string;
   line2: string;
   line3: string;
@@ -29,4 +29,9 @@ export interface Rider {
 
 export interface Riders {
   riders: Rider[];
+}
+
+export interface RiderFilterRequest {
+  email?: string;
+  phoneNumber?: string;
 }
