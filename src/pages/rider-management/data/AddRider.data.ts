@@ -1,6 +1,8 @@
 import { Gender } from '../enum/Gender.enum';
+import { AddRiderData } from '@/pages/rider-management/model/AddRider.interface.ts';
+import { Address } from '@/pages/rider-management/model/Riders.interface.ts';
 
-const RIDER_DATA_INITIAL_ADDRESS = {
+export const RIDER_DATA_INITIAL_ADDRESS: Address = {
   line1: '',
   line2: '',
   line3: '',
@@ -10,21 +12,24 @@ const RIDER_DATA_INITIAL_ADDRESS = {
   country: '',
 };
 
-export const RIDER_DATA_INITIAL_STATE = {
-  firstName: '',
-  middleName: '',
-  lastName: '',
-  email: '',
-  phoneNumber: '',
-  dateOfBirth: '',
-  currentAddress: RIDER_DATA_INITIAL_ADDRESS,
-  permanentAddress: RIDER_DATA_INITIAL_ADDRESS,
-  gender: Gender.Male,
+export const RIDER_DATA_INITIAL_STATE: AddRiderData = {
+  rider: {
+    firstName: '',
+    middleName: '',
+    lastName: '',
+    email: '',
+    phoneNumber: '',
+    dateOfBirth: '',
+    currentAddress: RIDER_DATA_INITIAL_ADDRESS,
+    permanentAddress: RIDER_DATA_INITIAL_ADDRESS,
+    gender: Gender.Male,
+  },
+
   photo: null,
-  aadhar: null,
+  aadhaar: null,
   pan: null,
-  dl: null,
+  drivingLicense: null,
 };
 
-export const MAX_STEP = 3;
+export const MAX_STEP = 4;
 export const MIN_STEP = 1;
