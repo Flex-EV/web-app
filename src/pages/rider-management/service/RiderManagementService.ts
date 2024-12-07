@@ -12,8 +12,8 @@ import {
 const RIDER_MANAGEMENT_BASE_URL =
   'http://3.109.1.118:8080/agent-api/v1/rest/riders';
 
-class RiderManagementService {
-  public static async fetchRiders(
+const RiderManagementService = {
+  async fetchRiders(
     page = 0,
     size = 20,
     filter: RiderFilterRequest = {}
@@ -29,11 +29,9 @@ class RiderManagementService {
       }
     );
     return response.data;
-  }
+  },
 
-  public static addRider = async (
-    addRiderData: AddRiderData
-  ): Promise<AddRiderDataResponse> => {
+  async addRider(addRiderData: AddRiderData): Promise<AddRiderDataResponse> {
     const formData = new FormData();
 
     if (addRiderData.photo) {
@@ -70,7 +68,7 @@ class RiderManagementService {
       },
     });
     return response.data;
-  };
-}
+  },
+};
 
 export default RiderManagementService;
