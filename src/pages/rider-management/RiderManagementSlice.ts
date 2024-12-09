@@ -1,4 +1,5 @@
 import {
+  RiderDetails,
   RiderFilterRequest,
   Riders,
 } from '@/pages/rider-management/model/Riders.interface.ts';
@@ -37,6 +38,18 @@ export const addRider = createAsyncThunk(
   }
 );
 
+// Thunk to fetch a rider by id
+export const fetchRiderById = createAsyncThunk(
+  'riders/fetchRiderById',
+  async (id: string, { rejectWithValue }) => {
+    try {
+      return await RiderManagementService.getRiderById(id);
+    } catch (error) {
+      return rejectWithValue({ error });
+    }
+  }
+);
+
 interface RiderManagementState {
   // Fetch all riders
   isFetchingRiders: boolean;
@@ -46,6 +59,11 @@ interface RiderManagementState {
   // Add a rider
   isCreatingRider: boolean;
   createRiderError: string | null;
+
+  // Fetch a rider by id
+  isFetchingRiderById: boolean;
+  fetchedRiderById: RiderDetails | null;
+  riderByIdFetchingError: string | null;
 }
 
 const initialRiderManagementState: RiderManagementState = {
@@ -59,6 +77,11 @@ const initialRiderManagementState: RiderManagementState = {
   // Add a rider
   isCreatingRider: false,
   createRiderError: null,
+
+  // Fetch a rider by id
+  isFetchingRiderById: false,
+  fetchedRiderById: null,
+  riderByIdFetchingError: null,
 };
 
 const riderManagementSlice = createSlice({
@@ -92,6 +115,20 @@ const riderManagementSlice = createSlice({
       .addCase(addRider.rejected, (state, action) => {
         state.isCreatingRider = false;
         state.createRiderError = action.payload as string;
+      })
+
+      // Fetch a rider by id
+      .addCase(fetchRiderById.pending, (state) => {
+        state.isFetchingRiderById = true;
+        state.riderByIdFetchingError = null;
+      })
+      .addCase(fetchRiderById.fulfilled, (state, action) => {
+        state.isFetchingRiderById = false;
+        state.fetchedRiderById = action.payload.data.rider;
+      })
+      .addCase(fetchRiderById.rejected, (state, action) => {
+        state.isFetchingRiderById = false;
+        state.riderByIdFetchingError = action.payload as string;
       });
   },
 });

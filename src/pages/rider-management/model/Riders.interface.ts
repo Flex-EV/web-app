@@ -41,3 +41,9 @@ export interface GetRidersResponse {
     riders: Riders;
   };
 }
+
+export interface GetRiderResponse {
+  data: {
+    rider: RiderDetails;
+  };
+}
