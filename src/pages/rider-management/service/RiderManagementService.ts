@@ -1,5 +1,6 @@
 import axios from 'axios';
 import {
+  GetRiderResponse,
   GetRidersResponse,
   RiderFilterRequest,
 } from '@/pages/rider-management/model/Riders.interface.ts';
@@ -10,9 +11,10 @@ import {
 } from '@/pages/rider-management/model/AddRider.interface.ts';
 
 const RIDER_MANAGEMENT_BASE_URL =
-  'http://3.109.1.118:8080/agent-api/v1/rest/riders';
+  'http://13.235.87.29:8080/agent-api/v1/rest/riders';
 
 const RiderManagementService = {
+  // Get all riders
   async fetchRiders(
     page = 0,
     size = 20,
@@ -31,6 +33,7 @@ const RiderManagementService = {
     return response.data;
   },
 
+  // Add rider
   async addRider(addRiderData: AddRiderData): Promise<AddRiderDataResponse> {
     const formData = new FormData();
 
@@ -67,6 +70,19 @@ const RiderManagementService = {
         'Content-Type': 'multipart/form-data',
       },
     });
+    return response.data;
+  },
+
+  // Get rider by id
+  async getRiderById(riderId: string): Promise<GetRiderResponse> {
+    const response = await axios.get(
+      `${RIDER_MANAGEMENT_BASE_URL}/${riderId}`,
+      {
+        headers: {
+          accept: 'application/vnd.flex-ev.rider+json;version=1',
+        },
+      }
+    );
     return response.data;
   },
 };
