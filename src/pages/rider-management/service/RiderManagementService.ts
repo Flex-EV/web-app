@@ -10,7 +10,7 @@ import {
 } from '@/pages/rider-management/model/AddRider.interface.ts';
 
 const RIDER_MANAGEMENT_BASE_URL =
-  'http://3.109.1.118:8080/agent-api/v1/rest/riders';
+  'http://13.235.87.29:8080/agent-api/v1/rest/riders';
 
 const RiderManagementService = {
   async fetchRiders(
