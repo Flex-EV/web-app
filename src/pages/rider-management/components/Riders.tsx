@@ -125,7 +125,7 @@ const Riders = () => {
           onClick={() => setIsModalOpen(true)}
           className="my-4 mr-10 bg-blue-500 hover:bg-blue-400 text-white py-2 pl-8 pr-4 rounded-lg absolute top-0 right-0"
         >
-          Add New Rider
+          Add Rider
           <UserRoundPlus
             className="absolute text-white left-2 top-2.5"
             size={18}
