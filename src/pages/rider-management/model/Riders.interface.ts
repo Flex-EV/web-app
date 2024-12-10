@@ -17,7 +17,7 @@ export interface RiderDetails {
   lastName: string;
   email: string;
   phoneNumber: string;
-  dateOfBirth: string;
+  dateOfBirth: Date;
   gender: Gender;
   currentAddress: Address;
   permanentAddress: Address;
@@ -39,5 +39,11 @@ export interface RiderFilterRequest {
 export interface GetRidersResponse {
   data: {
     riders: Riders;
+  };
+}
+
+export interface GetRiderResponse {
+  data: {
+    rider: RiderDetails;
   };
 }

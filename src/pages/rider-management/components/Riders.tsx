@@ -1,13 +1,14 @@
 import { motion } from 'framer-motion';
 import { Search, UserRoundPlus } from 'lucide-react';
 import React, { useEffect, useState } from 'react';
-import { RIDERS_TABLE_HEADERS } from '../data/Riders.data';
 import AddRider from './AddRider';
 import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch, RootState } from '@/store/store.ts';
 import { fetchRiders } from '@/pages/rider-management/RiderManagementSlice.ts';
-import { Rider } from '@/pages/rider-management/model/Riders.interface.ts';
+import { RiderDetails } from '@/pages/rider-management/model/Riders.interface.ts';
 import FlexLoader from '@/ui/components/FlexLoader.tsx';
+import FlexTable from '@/ui/components/FlexTable.tsx';
+import { FlexTableHeader } from '@/ui/model/FlexTable.interface.ts';
 
 const Riders = () => {
   const dispatch = useDispatch<AppDispatch>();
@@ -17,7 +18,7 @@ const Riders = () => {
 
   const [searchTerm, setSearchTerm] = useState('');
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [filteredRiders, setFilteredRiders] = useState<Rider[]>([]);
+  const [filteredRiders, setFilteredRiders] = useState<RiderDetails[]>([]);
 
   useEffect(() => {
     dispatch(fetchRiders({ page: 0, size: 20, filter: {} }));
@@ -54,7 +55,8 @@ const Riders = () => {
   // Use riders data directly for now
   useEffect(() => {
     if (Array.isArray(fetchedRiders)) {
-      setFilteredRiders(fetchedRiders);
+      const extractedRiders = fetchedRiders.map((rider) => rider.rider);
+      setFilteredRiders(extractedRiders);
     }
   }, [fetchedRiders]);
 
@@ -66,6 +68,50 @@ const Riders = () => {
   if (ridersFetchingError) {
     return <div>Error fetching riders: {ridersFetchingError}</div>;
   }
+
+  const renderRiderCell = (item: RiderDetails, field: keyof RiderDetails) => {
+    const value = item[field];
+
+    if (field === 'firstName') {
+      return (
+        <div className="flex items-center">
+          <div className="h-10 w-10 rounded-full bg-gradient-to-r from-blue-300 to-blue-500 flex items-center justify-center text-white font-semibold">
+            {item.firstName.charAt(0)}
+          </div>
+          <div className="ml-4">
+            <span className="text-sm font-medium text-gray-100">
+              {item.firstName}
+            </span>
+          </div>
+        </div>
+      );
+    }
+
+    if (value instanceof Date) {
+      const day = String(value.getDate()).padStart(2, '0');
+      const month = String(value.getMonth() + 1).padStart(2, '0');
+      const year = value.getFullYear();
+      return `${day}-${month}-${year}`;
+    }
+
+    if (value === null || value === undefined || value === '') {
+      return '-';
+    }
+
+    return typeof value === 'string' ? value : '-';
+  };
+  const RIDERS_TABLE_HEADERS: FlexTableHeader<RiderDetails>[] = [
+    { label: 'First Name', field: 'firstName' },
+    { label: 'Last Name', field: 'lastName' },
+    { label: 'Email', field: 'email' },
+    { label: 'Phone Number', field: 'phoneNumber' },
+    { label: 'Date of Birth', field: 'dateOfBirth' },
+    { label: 'Gender', field: 'gender' },
+  ];
+
+  const handleRiderRowClick = (rider: RiderDetails) => {
+    console.log('Rider clicked:', rider);
+  };
 
   return (
     <>
@@ -79,7 +125,7 @@ const Riders = () => {
           onClick={() => setIsModalOpen(true)}
           className="my-4 mr-10 bg-blue-500 hover:bg-blue-400 text-white py-2 pl-8 pr-4 rounded-lg absolute top-0 right-0"
         >
-          Add New Rider
+          Add Rider
           <UserRoundPlus
             className="absolute text-white left-2 top-2.5"
             size={18}
@@ -112,67 +158,12 @@ const Riders = () => {
           </div>
         </div>
 
-        <div className="overflow-x-auto">
-          <table className="min-w-full divide-y divide-gray-700">
-            <thead>
-              <tr className="className='px-6 py-3 text-left text-xs font-medium text-gray-400 uppercase tracking-wider">
-                {RIDERS_TABLE_HEADERS.map((header) => (
-                  <th
-                    key={header.field}
-                    className="px-6 py-3 text-left text-xs font-medium text-gray-400 uppercase tracking-wider"
-                  >
-                    {header.label}
-                  </th>
-                ))}
-              </tr>
-            </thead>
-
-            <tbody className="divide-y divide-gray-700">
-              {filteredRiders.map(({ rider }) => (
-                <motion.tr
-                  key={rider.id}
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  transition={{ duration: 0.3 }}
-                >
-                  <td className="px-6 py-4 whitespace-nowrap">
-                    <div className="flex items-center">
-                      <div className="flex-shrink-0 h-10 w-10">
-                        <div className="h-10 w-10 rounded-full bg-gradient-to-r from-blue-300 to-blue-500 flex items-center justify-center text-white font-semibold">
-                          {rider.firstName.charAt(0)}
-                        </div>
-                      </div>
-                      <div className="ml-4">
-                        <div className="text-sm font-medium text-gray-100">
-                          {rider.firstName}
-                        </div>
-                      </div>
-                    </div>
-                  </td>
-
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-300">
-                    {rider.middleName}
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-300">
-                    {rider.lastName}
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-300">
-                    {rider.email}
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-300">
-                    {rider.phoneNumber}
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-300">
-                    {rider.dateOfBirth}
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-300">
-                    {rider.gender}
-                  </td>
-                </motion.tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
+        <FlexTable
+          headers={RIDERS_TABLE_HEADERS}
+          data={filteredRiders}
+          renderCell={renderRiderCell}
+          onRowClick={handleRiderRowClick}
+        />
       </motion.div>
     </>
   );

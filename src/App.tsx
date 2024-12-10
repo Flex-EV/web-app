@@ -8,7 +8,7 @@ const App = () => {
   return (
     <Router>
       <Toaster position="top-right" richColors />
-      <main className="w-full h-screen flex flex-row">
+      <main className="flex h-screen">
         <div className="fixed inset-0 z-0">
           <div className="absolute inset-0 bg-gradient-to-br from-zinc-900 via-zinc-800 to-zinc-900 opacity-80" />
           <div className="absolute inset-0 backdrop-blur-sm" />

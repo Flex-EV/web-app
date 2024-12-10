@@ -1,5 +1,7 @@
+import Vehicles from '@/pages/vehicle-management/components/Vehicles.tsx';
+
 const VehicleManagement = () => {
-  return <div className="text-neutral-100">Vehicle Management</div>;
+  return <Vehicles />;
 };
 
 export default VehicleManagement;
