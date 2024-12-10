@@ -2,7 +2,8 @@ import { TextInput } from '../model/TextInput.interface';
 
 const FlexTextInput = ({
   label,
-  type,
+  type = 'text',
+  step,
   value,
   name,
   pattern,
@@ -19,6 +20,7 @@ const FlexTextInput = ({
       </label>
       <input
         type={type}
+        step={step}
         value={value}
         required={required}
         name={name}

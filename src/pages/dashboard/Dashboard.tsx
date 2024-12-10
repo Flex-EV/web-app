@@ -3,11 +3,13 @@ import VehicleStatus from './components/VehicleStatus';
 
 const Dashboard = () => {
   return (
-    <section className="flex flex-col h-full p-7 ml-5 gap-5">
-      <div className="flex-grow border border-gray-500 rounded-xl">
+    <section className="flex flex-col h-full p-7 gap-5">
+      <div className="flex-grow border border-gray-500 rounded-xl overflow-hidden shadow-lg">
         <Map />
       </div>
-      <VehicleStatus />
+      <div className="mt-6">
+        <VehicleStatus />
+      </div>
     </section>
   );
 };

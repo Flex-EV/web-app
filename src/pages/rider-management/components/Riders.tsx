@@ -75,7 +75,7 @@ const Riders = () => {
     if (field === 'firstName') {
       return (
         <div className="flex items-center">
-          <div className="h-8 w-8 rounded-full bg-gradient-to-r from-blue-300 to-blue-500 flex items-center justify-center text-white font-semibold">
+          <div className="h-10 w-10 rounded-full bg-gradient-to-r from-blue-300 to-blue-500 flex items-center justify-center text-white font-semibold">
             {item.firstName.charAt(0)}
           </div>
           <div className="ml-4">
@@ -102,7 +102,6 @@ const Riders = () => {
   };
   const RIDERS_TABLE_HEADERS: FlexTableHeader<RiderDetails>[] = [
     { label: 'First Name', field: 'firstName' },
-    { label: 'Middle Name', field: 'middleName' },
     { label: 'Last Name', field: 'lastName' },
     { label: 'Email', field: 'email' },
     { label: 'Phone Number', field: 'phoneNumber' },

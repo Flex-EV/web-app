@@ -8,14 +8,17 @@ const App = () => {
   return (
     <Router>
       <Toaster position="top-right" richColors />
-      <main className="w-full h-screen flex flex-row">
+      <main className="flex h-screen">
+        {/* Background Gradient */}
         <div className="fixed inset-0 z-0">
           <div className="absolute inset-0 bg-gradient-to-br from-zinc-900 via-zinc-800 to-zinc-900 opacity-80" />
           <div className="absolute inset-0 backdrop-blur-sm" />
         </div>
+        {/* Sidebar Component */}
         <div className="z-10">
           <Sidebar />
         </div>
+        {/* Main Content Area */}
         <div className="flex-1 flex flex-col z-10">
           <Header />
           <div className="flex-1 overflow-auto">

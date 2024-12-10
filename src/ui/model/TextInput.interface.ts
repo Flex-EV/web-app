@@ -2,7 +2,8 @@ import { ChangeEventHandler } from 'react';
 
 export interface TextInput {
   label: string;
-  type: string;
+  type?: string;
+  step?: string;
   value: string;
   name: string;
   disabled?: boolean;
