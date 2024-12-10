@@ -17,7 +17,7 @@ export interface RiderDetails {
   lastName: string;
   email: string;
   phoneNumber: string;
-  dateOfBirth: string;
+  dateOfBirth: Date;
   gender: Gender;
   currentAddress: Address;
   permanentAddress: Address;

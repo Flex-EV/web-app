@@ -9,7 +9,7 @@ export interface Vehicle {
   maxRangeKm: number;
   chassisNumber: string;
   rentalPricePerDay: number;
-  procurementDate: string;
+  procurementDate: Date;
 }
 
 export interface GetVehiclesResponse {
