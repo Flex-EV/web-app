@@ -12,7 +12,10 @@ import {
 } from '../data/AddRider.data';
 import { AddRiderProps, AddRiderData } from '../model/AddRider.interface';
 import { Gender } from '../enum/Gender.enum';
-import { PHONE_NUMBER_REGEX_PATTERN } from '../validation/RegexPattern';
+import {
+  PHONE_NUMBER_REGEX_PATTERN,
+  POSTAL_CODE_REGEX_PATTERN,
+} from '../validation/RegexPattern';
 import { toast } from 'sonner';
 import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch, RootState } from '@/store/store.ts';
@@ -101,7 +104,7 @@ const AddRider = ({ isOpen, onClose, onSuccess }: AddRiderProps) => {
     e.preventDefault();
     try {
       await dispatch(addRider(riderData));
-      toast.success('Rider Added Successfully');
+      toast.success('Rider added');
 
       setRiderData(RIDER_DATA_INITIAL_STATE);
       setCheck(false);
@@ -275,11 +278,12 @@ const AddRider = ({ isOpen, onClose, onSuccess }: AddRiderProps) => {
                   value={riderData.rider.currentAddress.postalCode}
                   name="currentAddress.postalCode"
                   onChange={handleAddressChange}
+                  pattern={POSTAL_CODE_REGEX_PATTERN}
                   required
                 />
               </div>
 
-              <div className="col-span-2 mt-6 flex justify-between">
+              <div className="col-span-2 mt-6 flex justify-between space-x-4">
                 <FlexButton
                   type="button"
                   variant="neutral"
@@ -399,11 +403,12 @@ const AddRider = ({ isOpen, onClose, onSuccess }: AddRiderProps) => {
                   }
                   name="permanentAddress.postalCode"
                   onChange={handleAddressChange}
+                  pattern={POSTAL_CODE_REGEX_PATTERN}
                   required
                   disabled={check}
                 />
               </div>
-              <div className="col-span-2 mt-6 flex justify-between">
+              <div className="col-span-2 mt-6 flex justify-between space-x-4">
                 <FlexButton
                   type="button"
                   variant="neutral"
@@ -448,7 +453,7 @@ const AddRider = ({ isOpen, onClose, onSuccess }: AddRiderProps) => {
                 onChange={(e) => handleFileChange(e, 'drivingLicense')}
                 required
               />
-              <div className="col-span-2 mt-6 flex justify-between">
+              <div className="col-span-2 mt-6 flex justify-between space-x-4">
                 <FlexButton
                   type="button"
                   variant="neutral"
