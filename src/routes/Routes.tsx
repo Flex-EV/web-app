@@ -6,6 +6,7 @@ import EarningDetails from '@/pages/earning-details/EarningDetails';
 import Reports from '@/pages/report/Reports';
 import ServiceRequest from '@/pages/service-request/ServiceRequest';
 import Dashboard from '@/pages/dashboard/Dashboard';
+import RiderInfo from '@/pages/rider-info/RiderInfo';
 
 const Routes = () => {
   return useRoutes([
@@ -32,6 +33,10 @@ const Routes = () => {
     {
       path: AppRoutes.SERVICE_REQUEST,
       element: <ServiceRequest />,
+    },
+    {
+      path: AppRoutes.RIDER_INFO,
+      element: <RiderInfo />,
     },
   ]);
 };
