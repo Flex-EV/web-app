@@ -5,4 +5,5 @@ export const enum AppRoutes {
   EARNING_DETAILS = '/earning-details',
   REPORTS = '/reports',
   SERVICE_REQUEST = '/service-request',
+  RIDER_INFO = '/rider-management/:riderId',
 }
