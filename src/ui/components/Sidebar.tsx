@@ -93,11 +93,6 @@ const Sidebar = () => {
               object-cover
               border-2
               border-white
-              transition-all
-              duration-300
-              hover:scale-110
-              hover:rotate-6
-              hover:shadow-xl
               active:scale-95
               shadow-md
             "

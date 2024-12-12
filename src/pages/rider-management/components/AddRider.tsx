@@ -13,12 +13,12 @@ import {
   PHONE_NUMBER_REGEX_PATTERN,
   POSTAL_CODE_REGEX_PATTERN,
 } from '../validation/RegexPattern';
-import { toast } from 'sonner';
 import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch, RootState } from '@/store/store.ts';
 import { addRider } from '@/pages/rider-management/RiderManagementSlice.ts';
 import FlexModal from '@/ui/components/FlexModal.tsx';
 import FlexDropdown from '@/ui/components/FlexDropdown.tsx';
+import { useNotification } from '@/ui/hooks/useNotification.ts';
 
 const AddRider = ({ isOpen, onClose, onSuccess }: AddRiderProps) => {
   const dispatch = useDispatch<AppDispatch>();
@@ -29,6 +29,7 @@ const AddRider = ({ isOpen, onClose, onSuccess }: AddRiderProps) => {
 
   const [step, setStep] = useState(1);
   const [check, setCheck] = useState(false);
+  const { showNotification } = useNotification();
   const [riderData, setRiderData] = useState<AddRiderData>(
     RIDER_DATA_INITIAL_STATE
   );
@@ -102,16 +103,23 @@ const AddRider = ({ isOpen, onClose, onSuccess }: AddRiderProps) => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      await dispatch(addRider(riderData));
-      toast.success('Rider added');
+      await dispatch(addRider(riderData)).unwrap();
 
       setRiderData(RIDER_DATA_INITIAL_STATE);
       setCheck(false);
       setStep(1);
 
       onSuccess();
+      showNotification({
+        type: 'success',
+        message: 'Rider added successfully.',
+        position: 'center',
+      });
     } catch (error) {
-      toast.error('Failed to Add Rider. Please try again.');
+      showNotification({
+        type: 'error',
+        message: `Failed to add rider. ${error}`,
+      });
     }
   };
 
@@ -300,7 +308,7 @@ const AddRider = ({ isOpen, onClose, onSuccess }: AddRiderProps) => {
                 />
                 <label
                   htmlFor="checkbox"
-                  className="text-m font-medium text-black"
+                  className="text-m font-medium text-black hover:cursor-pointer"
                 >
                   Same as Current Address
                 </label>
