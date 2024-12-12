@@ -7,7 +7,7 @@ import { AddVehicleFormData } from '@/pages/vehicle-management/model/AddVehicle.
 import { v4 as uuid } from 'uuid';
 
 const VEHICLE_MANAGEMENT_BASE_URL =
-  'http://65.2.37.100:8080/agent-api/v1/rest/vehicles';
+  'http://localhost:8080/agent-api/v1/rest/vehicles';
 
 const VehicleManagementService = {
   // Fetch all vehicles

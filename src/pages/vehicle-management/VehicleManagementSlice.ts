@@ -5,6 +5,7 @@ import {
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import VehicleManagementService from '@/pages/vehicle-management/service/VehicleManagementService.ts';
 import { AddVehicleFormData } from '@/pages/vehicle-management/model/AddVehicle.interface.ts';
+import { handleApiError } from '@/util/ErrorHandlerUtils.ts';
 
 // Thunk to fetch all vehicles
 export const fetchVehicles = createAsyncThunk(
@@ -24,7 +25,8 @@ export const fetchVehicles = createAsyncThunk(
     try {
       return await VehicleManagementService.fetchVehicles(page, size, filter);
     } catch (error) {
-      return rejectWithValue({ error });
+      const errorMessage = handleApiError(error);
+      return rejectWithValue(errorMessage);
     }
   }
 );
@@ -36,7 +38,8 @@ export const addVehicle = createAsyncThunk(
     try {
       return await VehicleManagementService.addVehicle(vehicle);
     } catch (error) {
-      return rejectWithValue({ error });
+      const errorMessage = handleApiError(error);
+      return rejectWithValue(errorMessage);
     }
   }
 );

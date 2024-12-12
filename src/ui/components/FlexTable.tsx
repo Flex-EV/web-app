@@ -7,64 +7,82 @@ const FlexTable = <T extends object>({
   onRowClick,
 }: FlexTableProps<T>) => {
   return (
-    <div className="overflow-x-auto bg-white rounded-lg shadow-lg border border-gray-200">
-      <table className="min-w-full divide-y divide-gray-200">
-        {/* Header */}
-        <thead className="bg-green-100">
-          <tr>
-            {headers.map((header) => (
-              <th
-                key={String(header.field)}
-                className="px-6 py-4 text-left text-sm font-semibold text-gray-700 uppercase tracking-wider border-b border-gray-300"
-                scope="col"
-              >
-                <div className="flex items-center gap-2">
-                  {header.label}
-                  {header.searchComponent && (
-                    <div className="text-gray-400">
-                      {header.searchComponent}
-                    </div>
-                  )}
-                </div>
-              </th>
-            ))}
-          </tr>
-        </thead>
-
-        {/* Body */}
-        <tbody className="bg-white divide-y divide-gray-200">
-          {data.length > 0 ? (
-            data.map((item, index) => (
-              <tr
-                key={index}
-                onClick={() => onRowClick?.(item)}
-                className="cursor-pointer hover:bg-green-50 transition duration-150 ease-in-out"
-                role="row"
-              >
-                {headers.map((header) => (
-                  <td
-                    key={String(header.field)}
-                    className="px-6 py-4 text-sm text-gray-800 whitespace-nowrap"
-                    role="cell"
-                  >
-                    {renderCell(item, header.field)}
-                  </td>
-                ))}
-              </tr>
-            ))
-          ) : (
+    <div className="w-full bg-white rounded-2xl border border-gray-100 shadow-xl overflow-hidden">
+      <div className="overflow-x-auto">
+        <table className="w-full text-sm">
+          {/* Header */}
+          <thead className="bg-gradient-to-br from-green-50 to-green-100 border-b border-green-200">
             <tr>
-              <td
-                colSpan={headers.length}
-                className="text-center py-6 text-gray-600"
-                role="cell"
-              >
-                No data available
-              </td>
+              {headers.map((header) => (
+                <th
+                  key={String(header.field)}
+                  className="px-6 py-4 text-left font-semibold text-green-800 uppercase tracking-wider relative group"
+                  scope="col"
+                >
+                  <div className="flex items-center space-x-3">
+                    <span className="flex-grow">{header.label}</span>
+                  </div>
+                </th>
+              ))}
             </tr>
-          )}
-        </tbody>
-      </table>
+          </thead>
+
+          {/* Body */}
+          <tbody>
+            {data.length > 0 ? (
+              data.map((item, index) => (
+                <tr
+                  key={index}
+                  onClick={() => onRowClick?.(item)}
+                  className="
+                    hover:bg-green-50 
+                    transition 
+                    duration-200 
+                    ease-in-out 
+                    border-b border-gray-100 
+                    last:border-b-0
+                    cursor-pointer 
+                    group
+                    hover:shadow-sm
+                  "
+                >
+                  {headers.map((header) => (
+                    <td
+                      key={String(header.field)}
+                      className="
+                        px-6 
+                        py-4 
+                        text-gray-700 
+                        group-hover:text-green-800 
+                        transition 
+                        duration-200
+                        whitespace-nowrap
+                      "
+                    >
+                      {renderCell(item, header.field)}
+                    </td>
+                  ))}
+                </tr>
+              ))
+            ) : (
+              <tr>
+                <td
+                  colSpan={headers.length}
+                  className="
+                    text-center 
+                    py-8 
+                    text-gray-500 
+                    bg-gray-50 
+                    italic
+                  "
+                >
+                  No data available
+                </td>
+              </tr>
+            )}
+          </tbody>
+        </table>
+      </div>
     </div>
   );
 };

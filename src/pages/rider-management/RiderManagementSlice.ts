@@ -6,6 +6,7 @@ import {
 import RiderManagementService from '@/pages/rider-management/service/RiderManagementService.ts';
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import { AddRiderData } from '@/pages/rider-management/model/AddRider.interface.ts';
+import { handleApiError } from '@/util/ErrorHandlerUtils.ts';
 
 // Thunk to fetch all riders
 export const fetchRiders = createAsyncThunk(
@@ -21,7 +22,8 @@ export const fetchRiders = createAsyncThunk(
     try {
       return await RiderManagementService.fetchRiders(page, size, filter);
     } catch (error) {
-      return rejectWithValue({ error });
+      const errorMessage = handleApiError(error);
+      return rejectWithValue(errorMessage);
     }
   }
 );
@@ -33,7 +35,8 @@ export const addRider = createAsyncThunk(
     try {
       return await RiderManagementService.addRider(addRiderData);
     } catch (error) {
-      return rejectWithValue({ error });
+      const errorMessage = handleApiError(error);
+      return rejectWithValue(errorMessage);
     }
   }
 );
@@ -45,7 +48,8 @@ export const fetchRiderById = createAsyncThunk(
     try {
       return await RiderManagementService.getRiderById(id);
     } catch (error) {
-      return rejectWithValue({ error });
+      const errorMessage = handleApiError(error);
+      return rejectWithValue(errorMessage);
     }
   }
 );

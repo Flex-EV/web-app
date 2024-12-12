@@ -9,14 +9,16 @@ import FlexButton from '@/ui/components/FlexButton.tsx';
 import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch, RootState } from '@/store/store.ts';
 import { addVehicle } from '@/pages/vehicle-management/VehicleManagementSlice.ts';
-import { toast } from 'sonner';
 import FlexModal from '@/ui/components/FlexModal.tsx';
+import { useNotification } from '@/ui/hooks/useNotification.ts';
 
 const AddVehicle = ({ isOpen, onClose, onSuccess }: AddVehicleProps) => {
   const dispatch = useDispatch<AppDispatch>();
   const { isAddingVehicle } = useSelector(
     (state: RootState) => state.vehicleManagement
   );
+
+  const { showNotification } = useNotification();
 
   const [vehicleFormData, setVehicleFormData] = useState<AddVehicleFormData>(
     INITIAL_ADD_VEHICLE_FORM_DATA
@@ -41,12 +43,20 @@ const AddVehicle = ({ isOpen, onClose, onSuccess }: AddVehicleProps) => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      await dispatch(addVehicle(vehicleFormData));
-      toast.success('Vehicle added');
+      await dispatch(addVehicle(vehicleFormData)).unwrap();
+
       setVehicleFormData(INITIAL_ADD_VEHICLE_FORM_DATA);
       onSuccess();
+      showNotification({
+        type: 'success',
+        message: 'Vehicle added successfully',
+        position: 'center',
+      });
     } catch (error) {
-      toast.error('Failed to add vehicle. Please try again.');
+      showNotification({
+        type: 'error',
+        message: `Failed to add vehicle. ${error}`,
+      });
     }
   };
 

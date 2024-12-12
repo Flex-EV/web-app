@@ -7,11 +7,11 @@ import { FlexTableHeader } from '@/ui/model/FlexTable.interface.ts';
 import { Vehicle } from '@/pages/vehicle-management/model/Vehicles.interface.ts';
 import FlexTable from '@/ui/components/FlexTable.tsx';
 import { Bike, Search } from 'lucide-react';
-import { formatDateToDdMmYyyy } from '@/util/DateTimeUtils.ts';
 import AddVehicle from '@/pages/vehicle-management/components/AddVehicle.tsx';
 import { motion } from 'framer-motion';
 import FlexButton from '@/ui/components/FlexButton.tsx';
 import FlexContainer from '@/ui/components/FlexContainer.tsx';
+import { formatDateToDdMmYyyy } from '@/util/DateTimeUtils.ts';
 
 const Vehicles = () => {
   const dispatch = useDispatch<AppDispatch>();
