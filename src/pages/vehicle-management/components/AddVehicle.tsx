@@ -1,5 +1,3 @@
-import { motion } from 'framer-motion';
-import { X } from 'lucide-react';
 import {
   AddVehicleFormData,
   AddVehicleProps,
@@ -12,6 +10,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch, RootState } from '@/store/store.ts';
 import { addVehicle } from '@/pages/vehicle-management/VehicleManagementSlice.ts';
 import { toast } from 'sonner';
+import FlexModal from '@/ui/components/FlexModal.tsx';
 
 const AddVehicle = ({ isOpen, onClose, onSuccess }: AddVehicleProps) => {
   const dispatch = useDispatch<AppDispatch>();
@@ -56,107 +55,95 @@ const AddVehicle = ({ isOpen, onClose, onSuccess }: AddVehicleProps) => {
   }
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-      <motion.div
-        initial={{ opacity: 0, scale: 0.95 }}
-        animate={{ opacity: 1, scale: 1 }}
-        exit={{ opacity: 0, scale: 0.95 }}
-        className="bg-gray-800 rounded-xl p-6 w-full max-w-2xl mx-4 relative border border-gray-700"
-      >
-        <button
-          onClick={onClose}
-          className="absolute right-4 top-4 text-gray-400 hover:text-white"
-        >
-          <X size={24} />
-        </button>
-        <form onSubmit={handleSubmit} className="grid grid-cols-2 gap-4">
-          <FlexTextInput
-            label="Vehicle Number"
-            name="vehicleNumber"
-            value={vehicleFormData.vehicleNumber}
-            onChange={handleInputChange}
-            required
+    <FlexModal title={'Vehicle Details'} onClose={onClose}>
+      <form onSubmit={handleSubmit} className="grid grid-cols-2 gap-4">
+        <FlexTextInput
+          label="Vehicle Number"
+          name="vehicleNumber"
+          value={vehicleFormData.vehicleNumber}
+          onChange={handleInputChange}
+          required
+        />
+        <FlexTextInput
+          label="Brand"
+          name="brand"
+          value={vehicleFormData.brand}
+          onChange={handleInputChange}
+          required
+        />
+        <FlexTextInput
+          label="Name"
+          name="name"
+          value={vehicleFormData.name}
+          onChange={handleInputChange}
+          required
+        />
+        <FlexTextInput
+          label="Model"
+          name="model"
+          value={vehicleFormData.model}
+          onChange={handleInputChange}
+          required
+        />
+        <FlexTextInput
+          label="Year of Manufacture"
+          name="yearOfManufacture"
+          type="number"
+          value={vehicleFormData.yearOfManufacture.toString()}
+          onChange={handleInputChange}
+          required
+        />
+        <FlexTextInput
+          label="Battery Capacity (kWh)"
+          name="batteryCapacityKwh"
+          type="number"
+          value={vehicleFormData.batteryCapacityKwh.toString()}
+          onChange={handleInputChange}
+          required
+        />
+        <FlexTextInput
+          label="Max Range (km)"
+          name="maxRangeKm"
+          type="number"
+          value={vehicleFormData.maxRangeKm.toString()}
+          onChange={handleInputChange}
+          required
+        />
+        <FlexTextInput
+          label="Chassis Number"
+          name="chassisNumber"
+          value={vehicleFormData.chassisNumber}
+          onChange={handleInputChange}
+          required
+        />
+        <FlexTextInput
+          label="Rental Price (per day)"
+          name="rentalPricePerDay"
+          type="number"
+          value={vehicleFormData.rentalPricePerDay.toString()}
+          onChange={handleInputChange}
+          required
+        />
+        <FlexTextInput
+          label="Procurement Date"
+          name="procurementDate"
+          type="date"
+          value={vehicleFormData.procurementDate}
+          max={today}
+          onChange={handleInputChange}
+          required
+        />
+        <div className="col-span-2 mt-6 flex justify-end gap-4">
+          <FlexButton
+            type="submit"
+            variant="primary"
+            text="Submit"
+            loading={isAddingVehicle}
+            fullWidth
           />
-          <FlexTextInput
-            label="Brand"
-            name="brand"
-            value={vehicleFormData.brand}
-            onChange={handleInputChange}
-            required
-          />
-          <FlexTextInput
-            label="Name"
-            name="name"
-            value={vehicleFormData.name}
-            onChange={handleInputChange}
-            required
-          />
-          <FlexTextInput
-            label="Model"
-            name="model"
-            value={vehicleFormData.model}
-            onChange={handleInputChange}
-            required
-          />
-          <FlexTextInput
-            label="Year of Manufacture"
-            name="yearOfManufacture"
-            type="number"
-            value={vehicleFormData.yearOfManufacture.toString()}
-            onChange={handleInputChange}
-            required
-          />
-          <FlexTextInput
-            label="Battery Capacity (kWh)"
-            name="batteryCapacityKwh"
-            type="number"
-            value={vehicleFormData.batteryCapacityKwh.toString()}
-            onChange={handleInputChange}
-            required
-          />
-          <FlexTextInput
-            label="Max Range (km)"
-            name="maxRangeKm"
-            type="number"
-            value={vehicleFormData.maxRangeKm.toString()}
-            onChange={handleInputChange}
-            required
-          />
-          <FlexTextInput
-            label="Chassis Number"
-            name="chassisNumber"
-            value={vehicleFormData.chassisNumber}
-            onChange={handleInputChange}
-            required
-          />
-          <FlexTextInput
-            label="Rental Price (per day)"
-            name="rentalPricePerDay"
-            type="number"
-            value={vehicleFormData.rentalPricePerDay.toString()}
-            onChange={handleInputChange}
-            required
-          />
-          <FlexTextInput
-            label="Procurement Date"
-            name="procurementDate"
-            type="date"
-            value={vehicleFormData.procurementDate}
-            max={today}
-            onChange={handleInputChange}
-            required
-          />
-          <div className="col-span-2 mt-6 flex justify-end gap-4">
-            <FlexButton
-              type="submit"
-              variant="primary"
-              text="Submit"
-              loading={isAddingVehicle}
-            />
-          </div>
-        </form>
-      </motion.div>
-    </div>
+        </div>
+      </form>
+    </FlexModal>
   );
 };
 export default AddVehicle;

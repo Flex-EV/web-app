@@ -1,7 +1,15 @@
-import { LucideIcon } from 'lucide-react';
+import React from 'react';
 
 export interface MenuItem {
   name: string;
-  icon: LucideIcon;
   path: string;
+  icon: React.ComponentType<{ className?: string }>;
+  isActive?: boolean;
+}
+
+export interface SidebarProps {
+  menuItems: MenuItem[];
+  onItemClick?: (item: MenuItem) => void;
+  logo?: string;
+  brandName?: string;
 }

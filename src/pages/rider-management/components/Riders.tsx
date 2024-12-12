@@ -1,7 +1,5 @@
-import { motion } from 'framer-motion';
-import { Search, UserRoundPlus } from 'lucide-react';
 import React, { useEffect, useState } from 'react';
-import AddRider from './AddRider';
+import { Search, UserPlus } from 'lucide-react';
 import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch, RootState } from '@/store/store.ts';
 import { fetchRiders } from '@/pages/rider-management/RiderManagementSlice.ts';
@@ -9,6 +7,10 @@ import { RiderDetails } from '@/pages/rider-management/model/Riders.interface.ts
 import FlexLoader from '@/ui/components/FlexLoader.tsx';
 import FlexTable from '@/ui/components/FlexTable.tsx';
 import { FlexTableHeader } from '@/ui/model/FlexTable.interface.ts';
+import AddRider from './AddRider';
+import { motion } from 'framer-motion';
+import FlexButton from '@/ui/components/FlexButton.tsx';
+import FlexContainer from '@/ui/components/FlexContainer';
 
 const Riders = () => {
   const dispatch = useDispatch<AppDispatch>();
@@ -38,21 +40,6 @@ const Riders = () => {
     setSearchTerm(term);
   };
 
-  // Temporary comment-out of filtering logic
-  // useEffect(() => {
-  //   if (fetchedRiders?.riders) {
-  //     const filtered = fetchedRiders.riders.filter((rider: any) => {
-  //       const { firstName, email } = rider.rider;
-  //       return (
-  //         firstName.toLowerCase().includes(searchTerm) ||
-  //         email.toLowerCase().includes(searchTerm)
-  //       );
-  //     });
-  //     setFilteredRiders(filtered);
-  //   }
-  // }, [searchTerm, fetchedRiders]);
-
-  // Use riders data directly for now
   useEffect(() => {
     if (Array.isArray(fetchedRiders)) {
       const extractedRiders = fetchedRiders.map((rider) => rider.rider);
@@ -60,13 +47,16 @@ const Riders = () => {
     }
   }, [fetchedRiders]);
 
-  //Temporary logic
   if (isFetchingRiders) {
     return <FlexLoader />;
   }
 
   if (ridersFetchingError) {
-    return <div>Error fetching riders: {ridersFetchingError}</div>;
+    return (
+      <div className="p-6 bg-red-50 text-red-800 rounded-lg">
+        Error fetching riders: {ridersFetchingError}
+      </div>
+    );
   }
 
   const renderRiderCell = (item: RiderDetails, field: keyof RiderDetails) => {
@@ -75,11 +65,11 @@ const Riders = () => {
     if (field === 'firstName') {
       return (
         <div className="flex items-center">
-          <div className="h-10 w-10 rounded-full bg-gradient-to-r from-blue-300 to-blue-500 flex items-center justify-center text-white font-semibold">
+          <div className="h-10 w-10 rounded-full bg-gradient-to-r from-green-500 to-green-600 flex items-center justify-center text-white font-semibold">
             {item.firstName.charAt(0)}
           </div>
           <div className="ml-4">
-            <span className="text-sm font-medium text-gray-100">
+            <span className="text-sm font-medium text-gray-800">
               {item.firstName}
             </span>
           </div>
@@ -100,6 +90,7 @@ const Riders = () => {
 
     return typeof value === 'string' ? value : '-';
   };
+
   const RIDERS_TABLE_HEADERS: FlexTableHeader<RiderDetails>[] = [
     { label: 'First Name', field: 'firstName' },
     { label: 'Last Name', field: 'lastName' },
@@ -114,58 +105,63 @@ const Riders = () => {
   };
 
   return (
-    <>
-      <AddRider
-        isOpen={isModalOpen}
-        onClose={closeModal}
-        onSuccess={handleAddRiderSuccess}
-      />
-      <div className="relative">
-        <button
-          onClick={() => setIsModalOpen(true)}
-          className="my-4 mr-10 bg-blue-500 hover:bg-blue-400 text-white py-2 pl-8 pr-4 rounded-lg absolute top-0 right-0"
-        >
-          Add Rider
-          <UserRoundPlus
-            className="absolute text-white left-2 top-2.5"
-            size={18}
-          />
-        </button>
-      </div>
-
+    <FlexContainer fullHeight padding="large" className={'m-5'}>
       <motion.div
-        className="mx-10 mt-20 mb-10 bg-gray-800 bg-opacity-50 backdrop-blur-md shadow-lg rounded-xl p-6 border border-gray-700"
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 0.2 }}
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        exit={{ opacity: 0 }}
+        className="container mx-auto px-4 py-6"
       >
-        <div className="flex justify-between items-center mb-6">
-          <h2 className="text-xl font-semibold text-gray-100">All Riders</h2>
-          <div className="relative flex items-center gap-4">
-            <div className="relative">
+        <AddRider
+          isOpen={isModalOpen}
+          onClose={closeModal}
+          onSuccess={handleAddRiderSuccess}
+        />
+
+        <div className="mb-6">
+          <h2 className="text-3xl font-bold text-gray-700 mb-4">
+            Rider Management
+          </h2>
+          <div className="flex justify-end items-center gap-4">
+            <div className="relative flex-grow max-w-lg">
               <input
                 type="text"
                 placeholder="Search riders..."
-                className="bg-gray-700 text-white placeholder-gray-400 rounded-lg pl-10 pr-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent transition duration-150 ease-in-out shadow-sm"
                 onChange={handleSearch}
                 value={searchTerm}
               />
               <Search
-                className="absolute left-3 top-2.5 text-gray-400"
+                className="absolute left-3 top-3 text-gray-400"
                 size={18}
               />
             </div>
+            <FlexButton
+              text="Add Rider"
+              type="button"
+              variant="primary"
+              icon={<UserPlus size={18} />}
+              onClick={() => setIsModalOpen(true)}
+            />
           </div>
         </div>
 
-        <FlexTable
-          headers={RIDERS_TABLE_HEADERS}
-          data={filteredRiders}
-          renderCell={renderRiderCell}
-          onRowClick={handleRiderRowClick}
-        />
+        <motion.div
+          initial={{ scale: 0.95, opacity: 0 }}
+          animate={{ scale: 1, opacity: 1 }}
+          transition={{ duration: 0.3 }}
+          className="bg-white shadow-md rounded-lg overflow-hidden"
+        >
+          <FlexTable
+            headers={RIDERS_TABLE_HEADERS}
+            data={filteredRiders}
+            renderCell={renderRiderCell}
+            onRowClick={handleRiderRowClick}
+          />
+        </motion.div>
       </motion.div>
-    </>
+    </FlexContainer>
   );
 };
+
 export default Riders;
