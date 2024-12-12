@@ -1,28 +1,20 @@
-import Sidebar from './ui/components/Sidebar';
 import { BrowserRouter as Router } from 'react-router-dom';
 import Routes from './routes/Routes';
 import Header from './ui/components/Header';
-import { Toaster } from 'sonner';
+import Sidebar from './ui/components/Sidebar';
 
 const App = () => {
   return (
     <Router>
-      <Toaster position="top-right" richColors />
-      <main className="flex h-screen">
-        <div className="fixed inset-0 z-0">
-          <div className="absolute inset-0 bg-gradient-to-br from-zinc-900 via-zinc-800 to-zinc-900 opacity-80" />
-          <div className="absolute inset-0 backdrop-blur-sm" />
-        </div>
-        <div className="z-10">
-          <Sidebar />
-        </div>
-        <div className="flex-1 flex flex-col z-10">
+      <div className="flex min-h-screen">
+        <Sidebar />
+        <div className="flex-1 flex flex-col">
           <Header />
-          <div className="flex-1 overflow-auto">
+          <main className="flex-1 ml-20 overflow-auto p-4">
             <Routes />
-          </div>
+          </main>
         </div>
-      </main>
+      </div>
     </Router>
   );
 };

@@ -1,69 +1,187 @@
-import { Menu } from 'lucide-react';
+import { useState, useRef, useEffect } from 'react';
+import { Menu, X } from 'lucide-react';
 import { Link, useLocation } from 'react-router-dom';
 import { MENU_ITEMS } from '../data/Sidebar.data';
-import { useState } from 'react';
 import flexLogo from '@/assets/flex_logo.jpeg';
 
 const Sidebar = () => {
-  const [isSidebarOpen, setIsSidebarOpen] = useState(true);
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const location = useLocation();
+  const sidebarRef = useRef<HTMLDivElement>(null);
+
+  // Close the sidebar if clicked outside
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (
+        sidebarRef.current &&
+        !sidebarRef.current.contains(event.target as Node)
+      ) {
+        setIsSidebarOpen(false);
+      }
+    };
+
+    if (isSidebarOpen) {
+      document.addEventListener('mousedown', handleClickOutside);
+    }
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [isSidebarOpen]);
 
   return (
     <div
-      className={`h-screen flex flex-col bg-gray-800 text-white border-r border-gray-700 transition-all duration-300 ease-in-out ${
-        isSidebarOpen ? 'w-64 shadow-lg' : 'w-20'
-      }`}
+      ref={sidebarRef}
+      className={`
+      fixed 
+      transition-all 
+      duration-500
+      ease-in-out
+      bg-gradient-to-b from-green-500 to-green-700
+      shadow-2xl
+      z-50
+      ${
+        isSidebarOpen
+          ? 'left-0 top-0 w-80 h-[100vh] rounded-r-2xl p-2 grid grid-rows-[auto_auto_1fr]'
+          : 'left-4 top-1/2 -translate-y-1/2 w-20 h-[70vh] rounded-full p-2 flex flex-col items-center justify-center'
+      }
+      overflow-hidden
+  `}
     >
-      {/* Header Section */}
-      <div className="flex items-center justify-between p-4 mb-4">
-        {isSidebarOpen && (
-          <div className="flex items-center transition-opacity duration-300 ease-in-out">
-            <img
-              src={flexLogo}
-              alt="Flex Logo"
-              className="rounded-md w-10 h-10"
-            />
-            <h1 className="ml-3 text-lg font-semibold tracking-wide">
-              Flex-Fleet
-            </h1>
-          </div>
+      {/* Toggle Button */}
+      <button
+        className={`
+          absolute 
+          top-4 
+          z-10 
+          flex 
+          items-center 
+          justify-center 
+          w-10 
+          h-10 
+          rounded-full 
+          transition-all 
+          duration-300 
+          transform 
+          hover:scale-110 
+          active:scale-95 
+          ${
+            isSidebarOpen
+              ? 'hover:text-red-500 text-white right-3 w-7 h-7'
+              : 'bg-white hover:bg-gray-200 text-green-500'
+          }
+        `}
+        onClick={() => setIsSidebarOpen(!isSidebarOpen)}
+        aria-label={isSidebarOpen ? 'Close Sidebar' : 'Open Sidebar'}
+      >
+        {isSidebarOpen ? (
+          <X className="w-6 h-6 transition-transform" />
+        ) : (
+          <Menu className="w-6 h-6 transition-transform" />
         )}
-        {/* Toggle Button */}
-        <button
-          className="p-2 rounded-md hover:bg-gray-700 transition-colors duration-200"
-          onClick={() => setIsSidebarOpen(!isSidebarOpen)}
-        >
-          <Menu className="w-6 h-6" />
-        </button>
-      </div>
+      </button>
+
+      {/* Logo and Brand */}
+      {isSidebarOpen && (
+        <div className="flex items-center justify-center mb-6 mt-2">
+          <img
+            src={flexLogo}
+            alt="Flex Logo"
+            className="
+              rounded-full
+              w-16
+              h-16
+              object-cover
+              border-2
+              border-white
+              transition-all
+              duration-300
+              hover:scale-110
+              hover:rotate-6
+              hover:shadow-xl
+              active:scale-95
+              shadow-md
+            "
+          />
+        </div>
+      )}
 
       {/* Navigation Menu */}
-      <nav className="flex-1 mt-4">
-        <ul className="space-y-2">
+      <nav
+        className={`
+          ${
+            isSidebarOpen ? 'block flex-1' : 'flex flex-col items-center w-full'
+          }
+        `}
+      >
+        <ul className={`space-y-2 ${isSidebarOpen ? '' : 'w-full'}`}>
           {MENU_ITEMS.map((item, index) => (
-            <li key={index}>
+            <li key={index} className="w-full">
               <Link
                 to={item.path}
-                className={`flex items-center px-4 py-3 rounded-md transition-colors duration-200 ${
-                  location.pathname === item.path
-                    ? 'bg-blue-500 border-l-4 border-blue-700'
-                    : 'hover:bg-gray-600'
-                } ${isSidebarOpen ? 'justify-start' : 'justify-center'}`}
-              >
-                <item.icon
-                  className={`h-5 w-5 transition-transform duration-300 ${
+                className={`
+                  flex 
+                  items-center 
+                  px-4 
+                  py-2.5 
+                  rounded-full
+                  transition-all 
+                  duration-300 
+                  group
+                  relative
+                  overflow-hidden
+                  ${isSidebarOpen ? 'justify-start rounded-md' : 'justify-center'}
+                  ${
                     location.pathname === item.path
-                      ? 'text-white transform scale-110'
-                      : 'text-gray-400'
-                  } ${isSidebarOpen ? 'mr-3' : 'transform scale-125'}`}
-                />
+                      ? 'bg-white text-green-500'
+                      : 'hover:bg-green-400 text-white'
+                  }
+                  before:absolute 
+                  before:inset-0 
+                  before:bg-white 
+                  before:opacity-0 
+                  before:transition-opacity 
+                  before:duration-300
+                  hover:before:opacity-10
+                  active:scale-95
+                `}
+              >
+                <div
+                  className={`
+                    flex 
+                    items-center 
+                    ${isSidebarOpen ? 'mr-4' : ''}
+                  `}
+                >
+                  <item.icon
+                    className={`
+                      h-6 
+                      w-6 
+                      transition-all 
+                      duration-300
+                      group-hover:rotate-6 
+                      ${isSidebarOpen ? '' : 'group-hover:scale-110'}
+                      ${
+                        location.pathname === item.path
+                          ? 'text-green-500 scale-110'
+                          : 'text-white'
+                      }
+                    `}
+                  />
+                </div>
                 {isSidebarOpen && (
                   <span
-                    className={`text-sm font-medium transition-opacity duration-300 ${
-                      location.pathname === item.path
-                        ? 'text-white'
-                        : 'text-gray-300'
-                    } ${isSidebarOpen ? 'opacity-100' : 'opacity-0'}`}
+                    className={`
+                      text-sm 
+                      font-medium 
+                      transition-all 
+                      duration-300
+                      group-hover:tracking-wider
+                      ${
+                        location.pathname === item.path
+                          ? 'text-green-500'
+                          : 'text-white'
+                      }
+                    `}
                   >
                     {item.name}
                   </span>
@@ -73,6 +191,12 @@ const Sidebar = () => {
           ))}
         </ul>
       </nav>
+
+      {isSidebarOpen && (
+        <div className="mt-auto pb-4 text-center">
+          <p className="text-xs text-white opacity-80">© 2024 Flex EV</p>
+        </div>
+      )}
     </div>
   );
 };

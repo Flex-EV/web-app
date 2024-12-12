@@ -3,7 +3,7 @@
 @tailwind utilities;
 
 body {
-  @apply bg-neutral-950 font-poppins;
+  @apply bg-gray-100 font-poppins;
 }
 
 @layer base {

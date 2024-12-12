@@ -1,9 +1,12 @@
-import { ChangeEventHandler } from 'react';
+import React from 'react';
 
-export interface FileInput {
-  label: string;
-  type: string;
-  accept: string;
+export interface FileInputProps {
+  label?: string;
+  type?: 'file';
+  accept?: string;
+  onChange?: (event: React.ChangeEvent<HTMLInputElement>) => void;
   required?: boolean;
-  onChange: ChangeEventHandler<HTMLInputElement>;
+  maxSizeInMB?: number;
+  multiple?: boolean;
+  className?: string;
 }

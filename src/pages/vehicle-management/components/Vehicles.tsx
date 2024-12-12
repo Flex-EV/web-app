@@ -3,13 +3,15 @@ import { AppDispatch, RootState } from '@/store/store.ts';
 import React, { useEffect, useState } from 'react';
 import { fetchVehicles } from '@/pages/vehicle-management/VehicleManagementSlice.ts';
 import FlexLoader from '@/ui/components/FlexLoader.tsx';
-import { motion } from 'framer-motion';
 import { FlexTableHeader } from '@/ui/model/FlexTable.interface.ts';
 import { Vehicle } from '@/pages/vehicle-management/model/Vehicles.interface.ts';
 import FlexTable from '@/ui/components/FlexTable.tsx';
 import { Bike, Search } from 'lucide-react';
 import { formatDateToDdMmYyyy } from '@/util/DateTimeUtils.ts';
 import AddVehicle from '@/pages/vehicle-management/components/AddVehicle.tsx';
+import { motion } from 'framer-motion';
+import FlexButton from '@/ui/components/FlexButton.tsx';
+import FlexContainer from '@/ui/components/FlexContainer.tsx';
 
 const Vehicles = () => {
   const dispatch = useDispatch<AppDispatch>();
@@ -28,14 +30,20 @@ const Vehicles = () => {
     setSearchTerm(term);
   };
 
-  //Temporary logic
-  console.log(fetchedVehicles);
   if (isFetchingVehicles) {
     return <FlexLoader />;
   }
 
   if (vehiclesFetchingError) {
-    return <div>Error fetching vehicles: {vehiclesFetchingError}</div>;
+    return (
+      <motion.div
+        initial={{ opacity: 0, y: -10 }}
+        animate={{ opacity: 1, y: 0 }}
+        className="p-6 bg-red-50 text-red-800 rounded-lg"
+      >
+        Error fetching vehicles: {vehiclesFetchingError}
+      </motion.div>
+    );
   }
 
   const closeModal = () => {
@@ -79,55 +87,70 @@ const Vehicles = () => {
     { label: 'Procurement Date', field: 'procurementDate' },
   ];
 
-  return (
-    <>
-      <AddVehicle
-        isOpen={isModalOpen}
-        onClose={closeModal}
-        onSuccess={handleAddVehicleSuccess}
-      />
-      <div className="relative">
-        <button
-          onClick={() => setIsModalOpen(true)}
-          className="my-4 mr-10 bg-blue-500 hover:bg-blue-400 text-white py-2 pl-8 pr-4 rounded-lg absolute top-0 right-0"
-        >
-          Add Vehicle
-          <Bike className="absolute text-white left-2 top-2.5" size={18} />
-        </button>
-      </div>
+  const filteredVehicles = fetchedVehicles.filter((vehicle) =>
+    Object.values(vehicle).some((value) =>
+      String(value).toLowerCase().includes(searchTerm)
+    )
+  );
 
+  return (
+    <FlexContainer fullHeight padding="large" className={'m-5'}>
       <motion.div
-        className="mx-6 lg:mx-10 mt-16 mb-8 bg-gray-800 bg-opacity-50 backdrop-blur-md shadow-lg rounded-xl p-6 border border-gray-700"
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 0.2 }}
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        exit={{ opacity: 0 }}
+        className="container mx-auto px-4 py-6"
       >
-        <div className="flex justify-between items-center mb-6">
-          <h2 className="text-2xl font-semibold text-gray-100">All Vehicles</h2>
-          <div className="relative flex items-center gap-4">
-            <div className="relative">
+        <AddVehicle
+          isOpen={isModalOpen}
+          onClose={closeModal}
+          onSuccess={handleAddVehicleSuccess}
+        />
+
+        <div className="mb-6">
+          <h2 className="text-3xl font-bold text-gray-700 mb-4">
+            Vehicle Management
+          </h2>
+          <div className="flex justify-end items-center gap-4">
+            <div className="relative flex-grow max-w-lg">
               <input
                 type="text"
                 placeholder="Search vehicles..."
-                className="bg-gray-700 text-white placeholder-gray-400 rounded-lg pl-10 pr-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent transition duration-150 ease-in-out shadow-sm"
                 onChange={handleSearch}
                 value={searchTerm}
               />
               <Search
-                className="absolute left-3 top-2.5 text-gray-400"
+                className="absolute left-3 top-3 text-gray-400"
                 size={18}
               />
             </div>
+            <FlexButton
+              text="Add Vehicle"
+              type="button"
+              variant="primary"
+              icon={<Bike size={18} />}
+              onClick={() => setIsModalOpen(true)}
+            />
           </div>
         </div>
-        <FlexTable
-          headers={VEHICLE_TABLE_HEADERS}
-          data={fetchedVehicles}
-          renderCell={renderVehicleCell}
-          onRowClick={handleVehicleRowClick}
-        />
+
+        <motion.div
+          initial={{ scale: 0.95, opacity: 0 }}
+          animate={{ scale: 1, opacity: 1 }}
+          transition={{ duration: 0.3 }}
+          className="bg-white shadow-md rounded-lg overflow-hidden"
+        >
+          <FlexTable
+            headers={VEHICLE_TABLE_HEADERS}
+            data={filteredVehicles}
+            renderCell={renderVehicleCell}
+            onRowClick={handleVehicleRowClick}
+          />
+        </motion.div>
       </motion.div>
-    </>
+    </FlexContainer>
   );
 };
+
 export default Vehicles;
