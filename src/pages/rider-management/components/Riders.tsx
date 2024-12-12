@@ -9,6 +9,8 @@ import { RiderDetails } from '@/pages/rider-management/model/Riders.interface.ts
 import FlexLoader from '@/ui/components/FlexLoader.tsx';
 import FlexTable from '@/ui/components/FlexTable.tsx';
 import { FlexTableHeader } from '@/ui/model/FlexTable.interface.ts';
+import { useNavigate } from 'react-router-dom';
+import { AppRoutes } from '@/routes/enum/Routes.enum';
 
 const Riders = () => {
   const dispatch = useDispatch<AppDispatch>();
@@ -19,6 +21,8 @@ const Riders = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [filteredRiders, setFilteredRiders] = useState<RiderDetails[]>([]);
+
+  const navigate = useNavigate();
 
   useEffect(() => {
     dispatch(fetchRiders({ page: 0, size: 20, filter: {} }));
@@ -110,7 +114,7 @@ const Riders = () => {
   ];
 
   const handleRiderRowClick = (rider: RiderDetails) => {
-    console.log('Rider clicked:', rider);
+    navigate(`${AppRoutes.RIDER_MANAGEMENT}/${rider.id}`);
   };
 
   return (
