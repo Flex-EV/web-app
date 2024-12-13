@@ -1,24 +1,26 @@
 import { BrowserRouter as Router } from 'react-router-dom';
-import Routes from './routes/Routes';
-import Header from './ui/components/Header';
-import Sidebar from './ui/components/Sidebar';
-import NotificationProvider from '@/ui/components/NotificationProvider.tsx';
+import Header from '@/modules/ui/components/Header';
+import Sidebar from '@/modules/ui/components/Sidebar';
+import NotificationProvider from '@/modules/ui/components/NotificationProvider.tsx';
+import { Routes } from '@/routes/Routes.tsx';
 
 const App = () => {
   return (
-    <NotificationProvider>
-      <Router>
-        <div className="flex min-h-screen">
+    <Router>
+      <NotificationProvider>
+        <div className="flex flex-col overflow-hidden">
           <Sidebar />
-          <div className="flex-1 flex flex-col">
+          <div className="flex-1 flex flex-col overflow-hidden">
             <Header />
-            <main className="flex-1 ml-24 overflow-auto p-4">
-              <Routes />
+            <main className="flex-1 overflow-auto pl-24">
+              <div className="p-4">
+                <Routes />
+              </div>
             </main>
           </div>
         </div>
-      </Router>
-    </NotificationProvider>
+      </NotificationProvider>
+    </Router>
   );
 };
 
