@@ -8,9 +8,9 @@ const App = () => {
   return (
     <Router>
       <NotificationProvider>
-        <div className="flex flex-col overflow-hidden">
+        <div className="flex h-screen overflow-hidden">
           <Sidebar />
-          <div className="flex-1 flex flex-col overflow-hidden">
+          <div className="flex flex-col flex-1 overflow-hidden">
             <Header />
             <main className="flex-1 overflow-auto pl-24">
               <div className="p-4">
