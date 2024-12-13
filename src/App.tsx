@@ -1,28 +1,25 @@
-import Sidebar from './ui/components/Sidebar';
 import { BrowserRouter as Router } from 'react-router-dom';
-import Routes from './routes/Routes';
-import Header from './ui/components/Header';
-import { Toaster } from 'sonner';
+import Header from '@/modules/ui/components/Header';
+import Sidebar from '@/modules/ui/components/Sidebar';
+import NotificationProvider from '@/modules/ui/components/NotificationProvider.tsx';
+import { Routes } from '@/routes/Routes.tsx';
 
 const App = () => {
   return (
     <Router>
-      <Toaster position="top-right" richColors />
-      <main className="flex h-screen">
-        <div className="fixed inset-0 z-0">
-          <div className="absolute inset-0 bg-gradient-to-br from-zinc-900 via-zinc-800 to-zinc-900 opacity-80" />
-          <div className="absolute inset-0 backdrop-blur-sm" />
-        </div>
-        <div className="z-10">
+      <NotificationProvider>
+        <div className="flex h-screen overflow-hidden">
           <Sidebar />
-        </div>
-        <div className="flex-1 flex flex-col z-10">
-          <Header />
-          <div className="flex-1 overflow-auto">
-            <Routes />
+          <div className="flex flex-col flex-1 overflow-hidden">
+            <Header />
+            <main className="flex-1 overflow-auto pl-24">
+              <div className="p-4">
+                <Routes />
+              </div>
+            </main>
           </div>
         </div>
-      </main>
+      </NotificationProvider>
     </Router>
   );
 };
