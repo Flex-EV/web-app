@@ -11,7 +11,7 @@ import {
 } from '@/modules/rider-management/model/AddRider.interface.ts';
 
 const RIDER_MANAGEMENT_BASE_URL =
-  'http://localhost:8080/agent-api/v1/rest/riders';
+  'http://65.1.128.132:8080/agent-api/v1/rest/riders';
 
 const RiderManagementService = {
   // Get all riders
