@@ -11,8 +11,7 @@ import AddRider from './AddRider';
 import { motion } from 'framer-motion';
 import FlexButton from '@/modules/ui/components/FlexButton.tsx';
 import FlexContainer from '@/modules/ui/components/FlexContainer';
-import { useNavigate } from 'react-router-dom';
-import { AppRoutes } from '@/routes/enum/Routes.enum';
+import { useCustomNavigate } from '@/routes/util/routing.tsx';
 
 const Riders = () => {
   const dispatch = useDispatch<AppDispatch>();
@@ -24,7 +23,7 @@ const Riders = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [filteredRiders, setFilteredRiders] = useState<RiderDetails[]>([]);
 
-  const navigate = useNavigate();
+  const navigate = useCustomNavigate();
 
   useEffect(() => {
     dispatch(fetchRiders({ page: 0, size: 20, filter: {} }));
@@ -105,7 +104,7 @@ const Riders = () => {
   ];
 
   const handleRiderRowClick = (rider: RiderDetails) => {
-    navigate(`${AppRoutes.RIDER_MANAGEMENT}/${rider.id}`);
+    navigate.toRiderDetails(rider.id);
   };
 
   return (

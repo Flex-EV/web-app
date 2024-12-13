@@ -9,7 +9,6 @@ const Sidebar = () => {
   const location = useLocation();
   const sidebarRef = useRef<HTMLDivElement>(null);
 
-  // Close the sidebar if clicked outside
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (
