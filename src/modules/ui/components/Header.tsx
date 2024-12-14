@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
 import { Bell, ChevronDown, LogOut, Settings, User } from 'lucide-react';
 import flexLogo from '@/assets/flex_logo.jpeg';
+import AuthService from '@/modules/auth/service/AuthService.ts';
 
 const Header = () => {
   const [isProfileDropdownOpen, setIsProfileDropdownOpen] = useState(false);
@@ -11,7 +12,7 @@ const Header = () => {
   };
 
   const handleLogout = () => {
-    // Implement logout functionality here
+    AuthService.logout();
   };
 
   return (

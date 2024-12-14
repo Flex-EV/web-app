@@ -74,7 +74,7 @@ const FlexButton: React.FC<FlexButtonProps> = ({
         variantStyles[variant].base,
         widthClass,
         disabledClass,
-        'relative flex items-center justify-center min-h-[2rem]',
+        'relative flex items-center justify-center min-h-[2.5rem]',
         className
       )}
       disabled={loading || props.disabled}

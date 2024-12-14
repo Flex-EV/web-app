@@ -1,4 +1,5 @@
 export const enum AppRoutes {
+  LOGIN = '/login',
   DASHBOARD = '/',
   RIDER_MANAGEMENT = '/rider-management',
   VEHICLE_MANAGEMENT = '/vehicle-management',
