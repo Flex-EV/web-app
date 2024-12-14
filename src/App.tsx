@@ -9,7 +9,6 @@ import { GlobalProtectedRoutes } from '@/modules/auth/components/GlobalProtected
 
 const App = () => {
   useEffect(() => {
-    console.log('App component mounted - Initializing AuthService');
     AuthService.initialize();
   }, []);
 
