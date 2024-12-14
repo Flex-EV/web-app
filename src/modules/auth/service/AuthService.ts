@@ -1,16 +1,10 @@
 import axios from 'axios';
 import { LoginCredentials } from '@/modules/auth/authSlice.ts';
 
-const AUTH_BASE_URL = 'http://localhost:8080/agent-api/v1/rest/auth';
+const AUTH_BASE_URL = 'http://65.0.74.170:8080/agent-api/v1/rest/auth';
 
 interface LoginResponse {
   data: {
-    user: {
-      id: string;
-      username: string;
-      email: string;
-      roles: string[];
-    };
     token: string;
   };
 }
