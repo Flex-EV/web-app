@@ -6,6 +6,7 @@ export const useCustomNavigate = () => {
 
   return {
     toDashboard: () => navigate(AppRoutes.DASHBOARD),
+
     toRiderDetails: (riderId: string) => {
       navigate(`${AppRoutes.RIDER_MANAGEMENT}/${riderId}`);
     },
