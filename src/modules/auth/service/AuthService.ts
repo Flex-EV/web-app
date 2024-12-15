@@ -101,7 +101,11 @@ const AuthService = {
         error.config.url?.includes(url)
       );
 
-      if (!isExcluded && error.response && error.response.status === 401) {
+      if (
+        !isExcluded &&
+        error.response &&
+        (error.response.status === 401 || error.response.status === 403)
+      ) {
         this.removeToken();
         window.location.href = '/login';
       }
