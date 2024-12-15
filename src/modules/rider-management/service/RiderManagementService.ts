@@ -11,7 +11,7 @@ import {
 } from '@/modules/rider-management/model/AddRider.interface.ts';
 
 const RIDER_MANAGEMENT_BASE_URL =
-  'http://65.0.74.170:8080/agent-api/v1/rest/riders';
+  'https://dev-api.flex-ev.tech:8080/agent-api/v1/rest/riders';
 
 const RiderManagementService = {
   // Get all riders
