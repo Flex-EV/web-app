@@ -78,7 +78,7 @@ const AddRider = ({ isOpen, onClose, onSuccess }: AddRiderProps) => {
 
   const handleFileChange = (
     e: React.ChangeEvent<HTMLInputElement>,
-    fieldName: 'photo' | 'aadhaar' | 'pan' | 'drivingLicense'
+    fieldName: 'photo' | 'aadhaar' | 'pan' | 'drivingLicense' | 'passbook'
   ) => {
     const file = e.target.files?.[0];
     if (file) {
@@ -130,6 +130,7 @@ const AddRider = ({ isOpen, onClose, onSuccess }: AddRiderProps) => {
     'Address Details',
     'Address Details',
     'Upload Documents',
+    'Upload Bank Details',
   ];
 
   const genderOptions = [
@@ -451,9 +452,39 @@ const AddRider = ({ isOpen, onClose, onSuccess }: AddRiderProps) => {
               type="file"
               accept=".pdf, .png, .jpg"
               onChange={(e) => handleFileChange(e, 'drivingLicense')}
-              required
             />
             <div className="col-span-2 mt-6 flex justify-between space-x-4">
+              <FlexButton
+                type="button"
+                variant="neutral"
+                text="Back"
+                onClick={handleBack}
+                fullWidth
+              />
+              <FlexButton
+                type="submit"
+                variant="primary"
+                text="Next"
+                loading={isCreatingRider}
+                fullWidth
+              />
+            </div>
+          </>
+        )}
+
+        {step === 5 && (
+          <>
+            <div className="md:col-span-2 flex justify-center">
+              <FlexFileInput
+                label="Upload Passbook"
+                type="file"
+                accept=".pdf, .png, .jpg"
+                onChange={(e) => handleFileChange(e, 'passbook')}
+                required
+              />
+            </div>
+
+            <div className="md:col-span-2 mt-6 flex justify-between space-x-4">
               <FlexButton
                 type="button"
                 variant="neutral"

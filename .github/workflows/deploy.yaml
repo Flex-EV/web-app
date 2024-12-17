@@ -102,3 +102,45 @@ jobs:
           task-definition: ${{ steps.task-def.outputs.task-definition }}
           service: web-app
           cluster: dev_web-app
+
+  deploy-prod:
+    name: Deploy Prod
+    runs-on: ubuntu-latest
+    needs: [deploy-dev]
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Download Image URI Artifact
+        uses: actions/download-artifact@v3
+        with:
+          name: image-uri
+          path: ./image-uri
+
+      - name: Read Image URI
+        id: read-image-uri
+        run: |
+          IMAGE_URI=$(cat ./image-uri/image-uri.txt)
+          echo "IMAGE_URI=$IMAGE_URI" >> $GITHUB_ENV
+
+      - name: Configure AWS Credentials for ECS
+        uses: aws-actions/configure-aws-credentials@v2
+        with:
+          aws-access-key-id: ${{ secrets.AWS_PROD_ECS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_PROD_ECS_SECRET_ACCESS_KEY }}
+          aws-region: ap-south-1
+
+      - name: Fill in the new image ID in the Amazon ECS task definition
+        id: task-def
+        uses: aws-actions/amazon-ecs-render-task-definition@v1
+        with:
+          task-definition: .aws/prod-ecs-task-definition.json
+          container-name: web-app
+          image: ${{ env.IMAGE_URI }}
+
+      - name: Deploy to ECS
+        uses: aws-actions/amazon-ecs-deploy-task-definition@v2
+        with:
+          task-definition: ${{ steps.task-def.outputs.task-definition }}
+          service: web-app
+          cluster: prod_web-app

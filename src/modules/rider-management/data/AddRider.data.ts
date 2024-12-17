@@ -29,7 +29,8 @@ export const RIDER_DATA_INITIAL_STATE: AddRiderData = {
   aadhaar: null,
   pan: null,
   drivingLicense: null,
+  passbook: null,
 };
 
-export const MAX_STEP = 4;
+export const MAX_STEP = 5;
 export const MIN_STEP = 1;

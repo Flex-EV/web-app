@@ -49,6 +49,9 @@ const RiderManagementService = {
     if (addRiderData.drivingLicense) {
       formData.append('driving_licence', addRiderData.drivingLicense);
     }
+    if (addRiderData.passbook) {
+      formData.append('passbook', addRiderData.passbook);
+    }
 
     const riderData = {
       data: {
