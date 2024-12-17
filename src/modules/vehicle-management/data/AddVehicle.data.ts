@@ -11,4 +11,7 @@ export const INITIAL_ADD_VEHICLE_FORM_DATA: AddVehicleFormData = {
   chassisNumber: '',
   rentalPricePerDay: 0,
   procurementDate: '',
+  iotDevice: {
+    imeiNumber: '',
+  },
 };

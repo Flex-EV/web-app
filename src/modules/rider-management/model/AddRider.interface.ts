@@ -13,6 +13,7 @@ export interface AddRiderData {
   aadhaar: File | null;
   pan: File | null;
   drivingLicense: File | null;
+  passbook: File | null;
 }
 
 export interface AddRiderDataResponse {
