@@ -28,16 +28,31 @@ const AddVehicle = ({ isOpen, onClose, onSuccess }: AddVehicleProps) => {
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
-    setVehicleFormData((prev) => ({
-      ...prev,
-      [name]:
-        name === 'yearOfManufacture' ||
-        name === 'batteryCapacityKwh' ||
-        name === 'maxRangeKm' ||
-        name === 'rentalPricePerDay'
-          ? Math.max(0, Number(value))
-          : value,
-    }));
+
+    setVehicleFormData((prev) => {
+      if (name.startsWith('iotDevice.')) {
+        const childKey = name.split('.')[1];
+
+        return {
+          ...prev,
+          iotDevice: {
+            ...prev.iotDevice,
+            [childKey]: value,
+          },
+        };
+      }
+
+      return {
+        ...prev,
+        [name]:
+          name === 'yearOfManufacture' ||
+          name === 'batteryCapacityKwh' ||
+          name === 'maxRangeKm' ||
+          name === 'rentalPricePerDay'
+            ? Math.max(0, Number(value))
+            : value,
+      };
+    });
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -71,6 +86,13 @@ const AddVehicle = ({ isOpen, onClose, onSuccess }: AddVehicleProps) => {
           label="Vehicle Number"
           name="vehicleNumber"
           value={vehicleFormData.vehicleNumber}
+          onChange={handleInputChange}
+          required
+        />
+        <FlexTextInput
+          label="IMEI Number"
+          value={vehicleFormData.iotDevice.imeiNumber}
+          name="iotDevice.imeiNumber"
           onChange={handleInputChange}
           required
         />

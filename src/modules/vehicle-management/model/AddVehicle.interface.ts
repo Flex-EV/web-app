@@ -4,6 +4,10 @@ export interface AddVehicleProps {
   onSuccess: () => void;
 }
 
+export interface AddIotDeviceFormData {
+  imeiNumber: string;
+}
+
 export interface AddVehicleFormData {
   vehicleNumber: string;
   brand: string;
@@ -15,4 +19,5 @@ export interface AddVehicleFormData {
   chassisNumber: string;
   rentalPricePerDay: number;
   procurementDate: string;
+  iotDevice: AddIotDeviceFormData;
 }
