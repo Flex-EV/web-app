@@ -7,7 +7,7 @@ import { AddVehicleFormData } from '@/modules/vehicle-management/model/AddVehicl
 import { v4 as uuid } from 'uuid';
 
 const VEHICLE_MANAGEMENT_BASE_URL =
-  'https://dev-api.flex-ev.tech:8080/agent-api/v1/rest/vehicles';
+  import.meta.env.VITE_AGENT_API_URL + '/agent-api/v1/rest/vehicles';
 
 const VehicleManagementService = {
   // Fetch all vehicles
