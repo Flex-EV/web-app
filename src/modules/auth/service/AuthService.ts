@@ -1,8 +1,7 @@
 import axios from 'axios';
 import { LoginCredentials } from '@/modules/auth/authSlice.ts';
 
-const AUTH_BASE_URL =
-  import.meta.env.VITE_AGENT_API_URL + '/agent-api/v1/rest/auth';
+const AUTH_BASE_URL = `${import.meta.env.VITE_AGENT_API_URL}/agent-api/v1/rest/auth`;
 
 interface LoginResponse {
   data: {
