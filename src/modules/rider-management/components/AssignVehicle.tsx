@@ -268,7 +268,7 @@ const AssignVehicle = ({ isOpen, onClose, riderId }: AssignVehicleProps) => {
         onClose={() => setIsConfirmModalOpen(false)}
         title="Confirm Vehicle Assignment"
       >
-        <div className="space-y-4">
+        <div className="space-y-5">
           <p className="text-gray-600">
             Are you sure you want to assign this vehicle to the rider?
           </p>
