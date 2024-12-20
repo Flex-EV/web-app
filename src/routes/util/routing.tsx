@@ -8,7 +8,7 @@ export const useCustomNavigate = () => {
     toDashboard: () => navigate(AppRoutes.DASHBOARD),
 
     toRiderDetails: (riderId: string) => {
-      navigate(`${AppRoutes.RIDER_MANAGEMENT}/${riderId}`);
+      navigate(`${AppRoutes.RIDER_MANAGEMENT}/riders/${riderId}`);
     },
   };
 };

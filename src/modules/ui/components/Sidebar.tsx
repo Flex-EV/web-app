@@ -143,26 +143,27 @@ const Sidebar = () => {
               >
                 <div
                   className={`
-        flex 
-        items-center 
-        ${isSidebarOpen ? 'mr-4' : ''}
-      `}
+                    flex 
+                    items-center 
+                    ${isSidebarOpen ? 'mr-4' : ''}
+                  `}
                 >
                   <item.icon
                     className={`
-          h-6 
-          w-6 
-          transition-all 
-          duration-300
-          group-hover:rotate-6 
-          ${isSidebarOpen ? '' : 'group-hover:scale-110'}
-          ${
-            (item.path === '/' && location.pathname === '/') ||
-            (item.path !== '/' && location.pathname.startsWith(item.path))
-              ? 'text-green-500 scale-110'
-              : 'text-white'
-          }
-        `}
+                      h-6
+                      w-6
+                      transition-all 
+                      duration-300
+                      group-hover:rotate-6 
+                      ${isSidebarOpen ? '' : 'group-hover:scale-110'}
+                      ${
+                        (item.path === '/' && location.pathname === '/') ||
+                        (item.path !== '/' &&
+                          location.pathname.startsWith(item.path))
+                          ? 'text-green-500 scale-110'
+                          : 'text-white'
+                      }
+                    `}
                   />
                 </div>
                 {isSidebarOpen && (
