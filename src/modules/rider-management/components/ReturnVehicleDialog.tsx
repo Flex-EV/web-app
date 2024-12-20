@@ -17,12 +17,11 @@ const ReturnVehicleDialog: React.FC<ReturnVehicleDialogProps> = ({
 }) => {
   return (
     <FlexDialog isOpen={isOpen} onClose={onClose} title="Return Vehicle">
-      <div className="space-y-4">
-        <div className="p-4  rounded-lg">
-          <p className="text-gray-600">
-            Are you sure you want to return this vehicle?
-          </p>
-        </div>
+      <div className="space-y-5">
+        <p className="text-gray-600">
+          Are you sure you want to return this vehicle?
+        </p>
+
         <div className="flex justify-end gap-3">
           <FlexButton
             text="Cancel"
