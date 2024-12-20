@@ -1,8 +1,8 @@
 import {
+  BikeIcon,
   FileText,
   IndianRupee,
   LayoutDashboard,
-  Truck,
   Users,
   Wrench,
 } from 'lucide-react';
@@ -22,7 +22,7 @@ export const MENU_ITEMS: MenuItem[] = [
   },
   {
     name: 'Vehicle Management',
-    icon: Truck,
+    icon: BikeIcon,
     path: AppRoutes.VEHICLE_MANAGEMENT,
   },
   {

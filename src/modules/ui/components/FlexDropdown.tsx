@@ -32,7 +32,7 @@ const FlexDropdown: React.FC<FlexDropdownProps> = ({
         value={value}
         onChange={onChange}
         required={required}
-        className="w-full bg-gray-100 text-gray-900 border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent transition duration-150 ease-in-out shadow-sm"
+        className="w-full bg-gray-100 text-gray-900 border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-1 focus:ring-green-500 focus:border-transparent transition duration-150 ease-in-out shadow-sm"
       >
         {options.map((option) => (
           <option

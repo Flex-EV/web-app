@@ -1,4 +1,5 @@
 import {
+  AssignedVehicleDetails,
   RiderDetails,
   RiderFilterRequest,
   Riders,
@@ -7,6 +8,7 @@ import RiderManagementService from '@/modules/rider-management/service/RiderMana
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import { AddRiderData } from '@/modules/rider-management/model/AddRider.interface.ts';
 import { handleApiError } from '@/util/ErrorHandlerUtils.ts';
+import { AssignVehicleRequest } from '@/modules/rider-management/model/AssignVehicle.interface.ts';
 
 // Thunk to fetch all riders
 export const fetchRiders = createAsyncThunk(
@@ -54,6 +56,44 @@ export const fetchRiderById = createAsyncThunk(
   }
 );
 
+// Thunk to assign vehicle to the rider
+export const assignVehicleToRider = createAsyncThunk(
+  'riders/assignVehicle',
+  async (
+    { riderId, request }: { riderId: string; request: AssignVehicleRequest },
+    { rejectWithValue }
+  ) => {
+    try {
+      return await RiderManagementService.assignVehicleToRider(
+        riderId,
+        request
+      );
+    } catch (error) {
+      const errorMessage = handleApiError(error);
+      return rejectWithValue(errorMessage);
+    }
+  }
+);
+
+// Thunk to return an assigned vehicle
+export const returnAssignedVehicle = createAsyncThunk(
+  'riders/returnVehicle',
+  async (
+    { riderId, vehicleId }: { riderId: string; vehicleId: string },
+    { rejectWithValue }
+  ) => {
+    try {
+      return await RiderManagementService.returnAssignedVehicle(
+        riderId,
+        vehicleId
+      );
+    } catch (error) {
+      const errorMessage = handleApiError(error);
+      return rejectWithValue(errorMessage);
+    }
+  }
+);
+
 interface RiderManagementState {
   // Fetch all riders
   isFetchingRiders: boolean;
@@ -67,7 +107,16 @@ interface RiderManagementState {
   // Fetch a rider by id
   isFetchingRiderById: boolean;
   fetchedRiderById: RiderDetails | null;
+  fetchedAssignedVehicle: AssignedVehicleDetails | null;
   riderByIdFetchingError: string | null;
+
+  // Assign vehicle to the rider
+  isAssigningVehicle: boolean;
+  assigningVehicleError: string | null;
+
+  // Return an assigned vehicle
+  isReturningVehicle: boolean;
+  returningVehicleError: string | null;
 }
 
 const initialRiderManagementState: RiderManagementState = {
@@ -85,7 +134,16 @@ const initialRiderManagementState: RiderManagementState = {
   // Fetch a rider by id
   isFetchingRiderById: false,
   fetchedRiderById: null,
+  fetchedAssignedVehicle: null,
   riderByIdFetchingError: null,
+
+  // Assign vehicle to the rider
+  isAssigningVehicle: false,
+  assigningVehicleError: null,
+
+  // Return an assigned vehicle
+  isReturningVehicle: false,
+  returningVehicleError: null,
 };
 
 const riderManagementSlice = createSlice({
@@ -129,10 +187,37 @@ const riderManagementSlice = createSlice({
       .addCase(fetchRiderById.fulfilled, (state, action) => {
         state.isFetchingRiderById = false;
         state.fetchedRiderById = action.payload.data.rider;
+        state.fetchedAssignedVehicle = action.payload.data.assignedVehicle;
       })
       .addCase(fetchRiderById.rejected, (state, action) => {
         state.isFetchingRiderById = false;
         state.riderByIdFetchingError = action.payload as string;
+      })
+
+      // Assign vehicle to the rider
+      .addCase(assignVehicleToRider.pending, (state) => {
+        state.isAssigningVehicle = true;
+        state.assigningVehicleError = null;
+      })
+      .addCase(assignVehicleToRider.fulfilled, (state) => {
+        state.isAssigningVehicle = false;
+      })
+      .addCase(assignVehicleToRider.rejected, (state, action) => {
+        state.isAssigningVehicle = false;
+        state.assigningVehicleError = action.payload as string;
+      })
+
+      // Return an assigned vehicle
+      .addCase(returnAssignedVehicle.pending, (state) => {
+        state.isReturningVehicle = true;
+        state.returningVehicleError = null;
+      })
+      .addCase(returnAssignedVehicle.fulfilled, (state) => {
+        state.isReturningVehicle = false;
+      })
+      .addCase(returnAssignedVehicle.rejected, (state, action) => {
+        state.isReturningVehicle = false;
+        state.returningVehicleError = action.payload as string;
       });
   },
 });
