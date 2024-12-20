@@ -80,7 +80,7 @@ const RiderDetails = () => {
     return parts.join(', ');
   };
 
-  const handleReturnAssignedVehicle = async () => {
+  const handleReturnAssignedVehicle = () => {
     setIsReturnConfirmModalOpen(true);
   };
 
