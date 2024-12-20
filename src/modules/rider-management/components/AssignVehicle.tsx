@@ -189,9 +189,6 @@ const AssignVehicle = ({ isOpen, onClose, riderId }: AssignVehicleProps) => {
                   onClick={() => setSelectedVehicleId(vehicle.id)}
                   role="button"
                   tabIndex={0}
-                  onKeyPress={(e) =>
-                    e.key === 'Enter' && setSelectedVehicleId(vehicle.id)
-                  }
                 >
                   <div className="flex items-start justify-between">
                     <div className="flex items-center gap-3">
