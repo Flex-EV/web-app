@@ -15,12 +15,13 @@ const VehicleManagementService = {
     size = 20,
     filter: VehicleFilter = {}
   ): Promise<GetVehiclesResponse> {
-    const { vehicleNumber } = filter;
+    const { vehicleNumber, availabilityStatus } = filter;
 
     const params = new URLSearchParams({
       page: page.toString(),
       size: size.toString(),
       ...(vehicleNumber && { vehicleNumber }),
+      ...(availabilityStatus && { availabilityStatus }),
     });
 
     const response = await axios.get(

@@ -1,4 +1,5 @@
 import { Gender } from '../enum/Gender.enum';
+import { VehicleAssignmentStatus } from '@/modules/rider-management/enum/AssignVehicle.enum.ts';
 
 export interface Address {
   line1: string;
@@ -23,8 +24,25 @@ export interface RiderDetails {
   permanentAddress: Address;
 }
 
+export interface AssignedVehicleDetails {
+  id: string;
+  vehicleId: string;
+  vehicleNumber: string;
+  brand: string;
+  name: string;
+  model: string;
+  batteryCapacityKwh: number;
+  maxRangeKm: number;
+  chassisNumber: string;
+  rentalPricePerDay: number;
+  assignmentDate: Date;
+  returningDate: Date;
+  assignmentStatus: VehicleAssignmentStatus;
+}
+
 export interface Rider {
   rider: RiderDetails;
+  assignedVehicle: AssignedVehicleDetails;
 }
 
 export interface Riders {
@@ -45,5 +63,6 @@ export interface GetRidersResponse {
 export interface GetRiderResponse {
   data: {
     rider: RiderDetails;
+    assignedVehicle: AssignedVehicleDetails;
   };
 }
