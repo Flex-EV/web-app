@@ -84,6 +84,19 @@ const AssignVehicle = ({ isOpen, onClose, riderId }: AssignVehicleProps) => {
     }
   }, [isOpen, currentPage, debouncedSearchTerm, dispatch]);
 
+  const handleSearch = (value: string) => {
+    setSearchTerm(value);
+    setCurrentPage(0);
+  };
+
+  const handleClose = () => {
+    setSelectedVehicleId('');
+    setSearchTerm('');
+    setCurrentPage(0);
+    setIsConfirmModalOpen(false);
+    onClose();
+  };
+
   const handleAssign = async () => {
     if (!selectedVehicleId || !riderId) {
       return;
@@ -115,19 +128,6 @@ const AssignVehicle = ({ isOpen, onClose, riderId }: AssignVehicleProps) => {
     } finally {
       setIsConfirmModalOpen(false);
     }
-  };
-
-  const handleSearch = (value: string) => {
-    setSearchTerm(value);
-    setCurrentPage(0);
-  };
-
-  const handleClose = () => {
-    setSelectedVehicleId('');
-    setSearchTerm('');
-    setCurrentPage(0);
-    setIsConfirmModalOpen(false);
-    onClose();
   };
 
   return (
