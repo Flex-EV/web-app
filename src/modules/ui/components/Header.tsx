@@ -58,7 +58,7 @@ const Header = () => {
             <div className="w-8 h-8 bg-green-100 rounded-full flex items-center justify-center shadow-sm">
               <User className="text-green-600 w-5 h-5 group-hover:scale-110 transition-transform" />
             </div>
-            <span className="text-gray-700 font-semibold">Hey, Mukul</span>
+            <span className="text-gray-700">Hey, Mukul</span>
             <ChevronDown
               className={`w-4 h-4 text-gray-500 transition-transform ${isProfileDropdownOpen ? 'rotate-180' : ''}`}
             />

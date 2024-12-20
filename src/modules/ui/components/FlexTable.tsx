@@ -7,7 +7,7 @@ const FlexTable = <T extends object>({
   onRowClick,
 }: FlexTableProps<T>) => {
   return (
-    <div className="w-full bg-white rounded-2xl border border-gray-100 shadow-xl overflow-hidden">
+    <div className="w-full bg-white rounded-2xl border border-gray-50 shadow-sm overflow-hidden">
       <div className="overflow-x-auto">
         <table className="w-full text-sm">
           {/* Header */}

@@ -13,7 +13,7 @@ export const riderManagementRoutes: RouteObject[] = [
         element: <RiderManagement />,
       },
       {
-        path: ':riderId',
+        path: 'riders/:riderId',
         element: <RiderInfo />,
       },
     ],

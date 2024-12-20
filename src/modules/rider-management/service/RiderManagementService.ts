@@ -9,6 +9,7 @@ import {
   AddRiderData,
   AddRiderDataResponse,
 } from '@/modules/rider-management/model/AddRider.interface.ts';
+import { AssignVehicleRequest } from '@/modules/rider-management/model/AssignVehicle.interface.ts';
 
 const RIDER_MANAGEMENT_BASE_URL = `${import.meta.env.VITE_AGENT_API_URL}/agent-api/v1/rest/riders`;
 
@@ -86,6 +87,46 @@ const RiderManagementService = {
       }
     );
     return response.data;
+  },
+
+  // Assign vehicle to the rider
+  async assignVehicleToRider(
+    riderId: string,
+    request: AssignVehicleRequest
+  ): Promise<void> {
+    const idempotencyKey = uuid();
+
+    await axios.post(
+      `${RIDER_MANAGEMENT_BASE_URL}/${riderId}/vehicle-assignments`,
+      { data: request },
+      {
+        headers: {
+          accept: 'application/vnd.flex-ev.empty-data+json;version=1',
+          'Content-Type': 'application/vnd.flex-ev.vehicle+json;version=1',
+          'Idempotency-Key': idempotencyKey,
+        },
+      }
+    );
+  },
+
+  // Return an assigned vehicle
+  async returnAssignedVehicle(
+    riderId: string,
+    vehicleId: string
+  ): Promise<void> {
+    const idempotencyKey = uuid();
+
+    await axios.patch(
+      `${RIDER_MANAGEMENT_BASE_URL}/${riderId}/vehicle-assignments/returns`,
+      { data: { vehicleId } },
+      {
+        headers: {
+          accept: 'application/vnd.flex-ev.empty-data+json;version=1',
+          'Content-Type': 'application/vnd.flex-ev.vehicle+json;version=1',
+          'Idempotency-Key': idempotencyKey,
+        },
+      }
+    );
   },
 };
 

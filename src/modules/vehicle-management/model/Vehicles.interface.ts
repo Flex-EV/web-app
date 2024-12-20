@@ -1,3 +1,5 @@
+import { AvailabilityStatus } from '@/modules/vehicle-management/enum/Vehicles.enum.ts';
+
 export interface Vehicle {
   id: string;
   vehicleNumber: string;
@@ -20,4 +22,5 @@ export interface GetVehiclesResponse {
 
 export interface VehicleFilter {
   vehicleNumber?: string;
+  availabilityStatus?: AvailabilityStatus;
 }
