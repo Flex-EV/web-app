@@ -1,11 +1,10 @@
-import { useState } from 'react';
 import { AdvancedMarker, APIProvider, Map } from '@vis.gl/react-google-maps';
 
 const GoogleMap = () => {
-  const [markerLocation, setMarkerLocation] = useState({
+  const markerLocation = {
     lat: 28.479423,
     lng: 76.99235,
-  });
+  };
 
   return (
     <APIProvider apiKey={import.meta.env.VITE_GOOGLE_MAPS_API_KEY}>
