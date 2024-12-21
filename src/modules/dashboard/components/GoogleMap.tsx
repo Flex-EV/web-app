@@ -12,7 +12,7 @@ const GoogleMap = () => {
       <div className="w-full h-[60vh]">
         <div className="w-full h-full shadow-lg rounded-lg overflow-hidden border border-gray-200">
           <Map
-            defaultZoom={17}
+            defaultZoom={13}
             defaultCenter={markerLocation}
             gestureHandling={'greedy'}
             disableDefaultUI
