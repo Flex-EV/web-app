@@ -1,12 +1,12 @@
-import Map from '../components/Map.tsx';
 import VehicleStatus from '../components/VehicleStatus.tsx';
 import FlexContainer from '@/modules/ui/components/FlexContainer.tsx';
+import GoogleMap from '@/modules/dashboard/components/GoogleMap.tsx';
 
 const Dashboard = () => {
   return (
     <FlexContainer title="Dashboard" fullHeight padding="large">
       <div className="flex-grow z-10">
-        <Map />
+        <GoogleMap />
       </div>
 
       <div className="mt-3">
