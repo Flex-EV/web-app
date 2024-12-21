@@ -419,7 +419,7 @@ const RiderDetails = () => {
           )}
         </FlexCard>
       </div>
-      <Outlet />;
+      <Outlet />
     </FlexContainer>
   );
 };
