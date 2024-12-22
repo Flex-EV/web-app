@@ -11,7 +11,7 @@ import {
 } from '@/modules/rider-management/model/AddRider.interface.ts';
 import { AssignVehicleRequest } from '@/modules/rider-management/model/AssignVehicle.interface.ts';
 
-const RIDER_MANAGEMENT_BASE_URL = `https://dev-api.flex-ev.tech:8080/agent-api/v1/rest/riders`;
+const RIDER_MANAGEMENT_BASE_URL = `${import.meta.env.VITE_AGENT_API_URL}/agent-api/v1/rest/riders`;
 
 const RiderManagementService = {
   // Get all riders
