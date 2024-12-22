@@ -1,28 +1,22 @@
-# Build stage
 FROM node:22-alpine AS build
-
 WORKDIR /app
-
-# Copy dependency files
 COPY package.json yarn.lock ./
 RUN yarn install
-
-# Copy the rest of the code
 COPY . .
-
-# The build step will have access to build-time args
-ARG VITE_AGENT_API_URL
-ENV VITE_AGENT_API_URL=$VITE_AGENT_API_URL
-
-# Build the application
 RUN yarn build
 
-# Production stage
 FROM nginx:alpine
-
+# Copy nginx config
 COPY nginx.conf /etc/nginx/nginx.conf
+
+# Copy the built files
 COPY --from=build /app/dist /usr/share/nginx/html
+
+# Copy the entrypoint script
+COPY docker-entrypoint.sh /
+RUN chmod +x /docker-entrypoint.sh
 
 EXPOSE 80
 
-CMD ["nginx", "-g", "daemon off;"]
+# Use the entrypoint script
+CMD ["/docker-entrypoint.sh"]
