@@ -1,15 +1,14 @@
 import { AdvancedMarker, APIProvider, Map } from '@vis.gl/react-google-maps';
-import { getEnvVars } from '@/util/env.ts';
 
 const GoogleMap = () => {
-  const { GOOGLE_MAPS_API_KEY, GOOGLE_MAP_ID } = getEnvVars();
-
   const markerLocation = {
     lat: 28.479423,
     lng: 76.99235,
   };
 
+  const GOOGLE_MAPS_API_KEY = import.meta.env.VITE_GOOGLE_MAPS_API_KEY;
   console.log(GOOGLE_MAPS_API_KEY);
+  const GOOGLE_MAP_ID = import.meta.env.VITE_GOOGLE_MAP_ID;
   console.log(GOOGLE_MAP_ID);
 
   return (
