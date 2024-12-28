@@ -349,7 +349,7 @@ const AddRider = ({ isOpen, onClose, onSuccess }: AddRiderProps) => {
                     ? riderData.rider.currentAddress.line3
                     : riderData.rider.permanentAddress.line3
                 }
-                name="permanentAddress.line2"
+                name="permanentAddress.line3"
                 onChange={handleAddressChange}
                 disabled={check}
               />
