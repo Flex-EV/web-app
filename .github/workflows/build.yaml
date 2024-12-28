@@ -7,6 +7,15 @@ on:
         default: '22'
         required: true
         type: string
+    secrets:
+      DEV_GOOGLE_MAPS_API_KEY:
+        required: true
+      DEV_GOOGLE_MAP_ID:
+        required: true
+      PROD_GOOGLE_MAPS_API_KEY:
+        required: true
+      PROD_GOOGLE_MAP_ID:
+        required: true
 
 jobs:
   build-react:
@@ -41,9 +50,6 @@ jobs:
             echo "VITE_GOOGLE_MAP_ID=${{ secrets.DEV_GOOGLE_MAP_ID }}" >> .env
             echo "VITE_API_URL=https://dev-api.flex-ev.tech:8080" >> .env
           fi
-
-      - name: Validate .env File
-        run: cat .env
 
       - name: Install Dependencies
         run: yarn install

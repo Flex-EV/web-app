@@ -7,9 +7,7 @@ const GoogleMap = () => {
   };
 
   const GOOGLE_MAPS_API_KEY = import.meta.env.VITE_GOOGLE_MAPS_API_KEY;
-  console.log(GOOGLE_MAPS_API_KEY);
   const GOOGLE_MAP_ID = import.meta.env.VITE_GOOGLE_MAP_ID;
-  console.log(GOOGLE_MAP_ID);
 
   return (
     <APIProvider apiKey={GOOGLE_MAPS_API_KEY}>

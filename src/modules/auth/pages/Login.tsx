@@ -23,7 +23,6 @@ const Login: React.FC = () => {
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
-    console.log(import.meta.env.VITE_AGENT_API_URL);
     await dispatch(login({ email, password })).unwrap();
     navigate.toDashboard();
     showNotification({
