@@ -174,7 +174,6 @@ const AddRider = ({ isOpen, onClose, onSuccess }: AddRiderProps) => {
               name="email"
               type="email"
               onChange={handleInputChange}
-              required
               value={riderData.rider.email}
             />
             <FlexTextInput
@@ -349,7 +348,7 @@ const AddRider = ({ isOpen, onClose, onSuccess }: AddRiderProps) => {
                     ? riderData.rider.currentAddress.line3
                     : riderData.rider.permanentAddress.line3
                 }
-                name="permanentAddress.line2"
+                name="permanentAddress.line3"
                 onChange={handleAddressChange}
                 disabled={check}
               />
@@ -480,7 +479,6 @@ const AddRider = ({ isOpen, onClose, onSuccess }: AddRiderProps) => {
                 type="file"
                 accept=".pdf, .png, .jpg"
                 onChange={(e) => handleFileChange(e, 'passbook')}
-                required
               />
             </div>
 
