@@ -51,9 +51,6 @@ jobs:
             echo "VITE_API_URL=https://dev-api.flex-ev.tech:8080" >> .env
           fi
 
-      - name: Validate .env File
-        run: cat .env
-
       - name: Install Dependencies
         run: yarn install
 
