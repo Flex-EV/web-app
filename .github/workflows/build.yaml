@@ -14,11 +14,11 @@ on:
         required: true
       DEV_GOOGLE_MAP_ID:
         required: true
+      PROD_API_BASE_URL:
+        required: true
       PROD_GOOGLE_MAPS_API_KEY:
         required: true
       PROD_GOOGLE_MAP_ID:
-        required: true
-      PROD_API_BASE_URL:
         required: true
 
 jobs:
@@ -52,7 +52,7 @@ jobs:
           else
             echo "VITE_GOOGLE_MAPS_API_KEY=${{ secrets.DEV_GOOGLE_MAPS_API_KEY }}" >> .env
             echo "VITE_GOOGLE_MAP_ID=${{ secrets.DEV_GOOGLE_MAP_ID }}" >> .env
-            echo "VITE_API_BASE_URL=${{ secret.DEV_API_BASE_URL }}" >> .env
+            echo "VITE_API_BASE_URL=${{ secrets.DEV_API_BASE_URL }}" >> .env
           fi
 
       - name: Validate .env File
