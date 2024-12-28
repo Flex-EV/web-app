@@ -13,8 +13,10 @@ jobs:
     with:
       node_version: '22'
     secrets:
+      DEV_API_BASE_URL: ${{ secrets.DEV_API_BASE_URL }}
       DEV_GOOGLE_MAPS_API_KEY: ${{ secrets.DEV_GOOGLE_MAPS_API_KEY }}
       DEV_GOOGLE_MAP_ID: ${{ secrets.DEV_GOOGLE_MAP_ID }}
+      PROD_API_BASE_URL: ${{ secrets.PROD_API_BASE_URL }}
       PROD_GOOGLE_MAPS_API_KEY: ${{ secrets.PROD_GOOGLE_MAPS_API_KEY }}
       PROD_GOOGLE_MAP_ID: ${{ secrets.PROD_GOOGLE_MAP_ID }}
 
