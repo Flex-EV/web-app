@@ -1,7 +1,7 @@
 import axios from 'axios';
 import { LoginCredentials } from '@/modules/auth/authSlice.ts';
 
-const AUTH_BASE_URL = `https://api.flex-ev.tech:8080/agent-api/v1/rest/auth`;
+const AUTH_BASE_URL = `${import.meta.env.VITE_API_BASE_URL}/agent-api/v1/rest/auth`;
 
 interface LoginResponse {
   data: {
