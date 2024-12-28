@@ -174,7 +174,6 @@ const AddRider = ({ isOpen, onClose, onSuccess }: AddRiderProps) => {
               name="email"
               type="email"
               onChange={handleInputChange}
-              required
               value={riderData.rider.email}
             />
             <FlexTextInput
@@ -480,7 +479,6 @@ const AddRider = ({ isOpen, onClose, onSuccess }: AddRiderProps) => {
                 type="file"
                 accept=".pdf, .png, .jpg"
                 onChange={(e) => handleFileChange(e, 'passbook')}
-                required
               />
             </div>
 
