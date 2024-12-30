@@ -7,32 +7,34 @@ on:
       - develop
 
 jobs:
-  build:
-    name: Build
-    uses: ./.github/workflows/build.yaml
-    with:
-      node_version: '22'
-    secrets:
-      DEV_API_BASE_URL: ${{ secrets.DEV_API_BASE_URL }}
-      DEV_GOOGLE_MAPS_API_KEY: ${{ secrets.DEV_GOOGLE_MAPS_API_KEY }}
-      DEV_GOOGLE_MAP_ID: ${{ secrets.DEV_GOOGLE_MAP_ID }}
-      PROD_API_BASE_URL: ${{ secrets.PROD_API_BASE_URL }}
-      PROD_GOOGLE_MAPS_API_KEY: ${{ secrets.PROD_GOOGLE_MAPS_API_KEY }}
-      PROD_GOOGLE_MAP_ID: ${{ secrets.PROD_GOOGLE_MAP_ID }}
-
-  docker:
-    name: Docker Build
+  build-and-deploy:
+    name: Build and Deploy
     runs-on: ubuntu-latest
-    needs: build
     steps:
       - name: Checkout Code
         uses: actions/checkout@v3
 
-      - name: Download React Build Artifacts
-        uses: actions/download-artifact@v3
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
         with:
-          name: react-build
-          path: ./dist
+          node-version: '22'
+
+      - name: Create Environment File
+        run: |
+          if [[ "$GITHUB_REF" == "refs/heads/master" ]]; then
+            echo "VITE_GOOGLE_MAPS_API_KEY=${{ secrets.PROD_GOOGLE_MAPS_API_KEY }}" >> .env
+            echo "VITE_GOOGLE_MAP_ID=${{ secrets.PROD_GOOGLE_MAP_ID }}" >> .env
+            echo "VITE_API_BASE_URL=${{ secrets.PROD_API_BASE_URL }}" >> .env
+          else
+            echo "VITE_GOOGLE_MAPS_API_KEY=${{ secrets.DEV_GOOGLE_MAPS_API_KEY }}" >> .env
+            echo "VITE_GOOGLE_MAP_ID=${{ secrets.DEV_GOOGLE_MAP_ID }}" >> .env
+            echo "VITE_API_BASE_URL=${{ secrets.DEV_API_BASE_URL }}" >> .env
+          fi
+
+      - name: Install and Build
+        run: |
+          yarn install
+          yarn build
 
       - name: Configure AWS Credentials
         uses: aws-actions/configure-aws-credentials@v2
@@ -41,121 +43,68 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_ECR_SECRET_ACCESS_KEY }}
           aws-region: ap-south-1
 
-      - name: Log in to Amazon ECR
+      - name: Login to Amazon ECR
         id: login-ecr
         uses: aws-actions/amazon-ecr-login@v2
 
-      - name: Get Commit Hash
-        id: commit-hash
-        run: echo "commit_hash=$(git rev-parse --short HEAD)" >> $GITHUB_ENV
-
-      - name: Get Timestamp
-        id: timestamp
-        run: echo "timestamp=$(date +'%Y-%m-%d-%H-%M')" >> $GITHUB_ENV
-
-      - name: Build, Tag, and Push Docker Image
+      - name: Build and Push Docker Image
         env:
           ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
           ECR_REPOSITORY: ${{ secrets.ECR_REPO_NAME }}
-          IMAGE_TAG: '${{ env.commit_hash }}-${{ env.timestamp }}'
+          IMAGE_TAG: ${{ github.sha }}
         run: |
           docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG .
           docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
-          echo "$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG" > image-uri.txt
+          echo "image=$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG" >> $GITHUB_ENV
 
-      - name: Upload Image URI Artifact
-        uses: actions/upload-artifact@v3
-        with:
-          name: image-uri
-          path: image-uri.txt
-
-  deploy-dev:
-    name: Deploy dev
-    runs-on: ubuntu-latest
-    needs: [docker]
-    if: github.ref == 'refs/heads/develop'
-    steps:
-      - name: Checkout Code
-        uses: actions/checkout@v4
-
-      - name: Download Image URI Artifact
-        uses: actions/download-artifact@v3
-        with:
-          name: image-uri
-          path: ./image-uri
-
-      - name: Read Image URI
-        id: read-image-uri
-        run: |
-          IMAGE_URI=$(cat ./image-uri/image-uri.txt)
-          echo "IMAGE_URI=$IMAGE_URI" >> $GITHUB_ENV
-
-      - name: Configure AWS Credentials for ECS
+      # Dev Deployment
+      - name: Configure AWS Dev Credentials
+        if: github.ref == 'refs/heads/develop'
         uses: aws-actions/configure-aws-credentials@v2
         with:
           aws-access-key-id: ${{ secrets.AWS_DEV_ECS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_DEV_ECS_SECRET_ACCESS_KEY }}
           aws-region: ap-south-1
 
-      - name: Fill in the new image ID in the Amazon ECS task definition
-        id: task-def
+      - name: Render Dev Task Definition
+        if: github.ref == 'refs/heads/develop'
+        id: render-dev-container
         uses: aws-actions/amazon-ecs-render-task-definition@v1
         with:
           task-definition: .aws/dev-ecs-task-definition.json
           container-name: web-app
-          image: ${{ env.IMAGE_URI }}
+          image: ${{ env.image }}
 
-      - name: Deploy to ECS
+      - name: Deploy to Dev ECS
+        if: github.ref == 'refs/heads/develop'
         uses: aws-actions/amazon-ecs-deploy-task-definition@v2
         with:
-          task-definition: ${{ steps.task-def.outputs.task-definition }}
+          task-definition: ${{ steps.render-dev-container.outputs.task-definition }}
           service: web-app
           cluster: dev_web-app
 
-  deploy-prod:
-    name: Deploy Prod
-    runs-on: ubuntu-latest
-    needs: [docker]
-    if: github.ref == 'refs/heads/master'
-    steps:
-      - name: Approval Required
-        run: |
-          echo "Waiting for manual approval to proceed with production deployment..."
-          echo "::pause::"
-
-      - name: Checkout Code
-        uses: actions/checkout@v4
-
-      - name: Download Image URI Artifact
-        uses: actions/download-artifact@v3
-        with:
-          name: image-uri
-          path: ./image-uri
-
-      - name: Read Image URI
-        id: read-image-uri
-        run: |
-          IMAGE_URI=$(cat ./image-uri/image-uri.txt)
-          echo "IMAGE_URI=$IMAGE_URI" >> $GITHUB_ENV
-
-      - name: Configure AWS Credentials for ECS
+      # Prod Deployment
+      - name: Configure AWS Prod Credentials
+        if: github.ref == 'refs/heads/master'
         uses: aws-actions/configure-aws-credentials@v2
         with:
           aws-access-key-id: ${{ secrets.AWS_PROD_ECS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_PROD_ECS_SECRET_ACCESS_KEY }}
           aws-region: ap-south-1
 
-      - name: Fill in the new image ID in the Amazon ECS task definition
-        id: task-def
+      - name: Render Prod Task Definition
+        if: github.ref == 'refs/heads/master'
+        id: render-prod-container
         uses: aws-actions/amazon-ecs-render-task-definition@v1
         with:
           task-definition: .aws/prod-ecs-task-definition.json
           container-name: web-app
-          image: ${{ env.IMAGE_URI }}
+          image: ${{ env.image }}
 
-      - name: Deploy to ECS
+      - name: Deploy to Prod ECS
+        if: github.ref == 'refs/heads/master'
         uses: aws-actions/amazon-ecs-deploy-task-definition@v2
         with:
-          task-definition: ${{ steps.task-def.outputs.task-definition }}
+          task-definition: ${{ steps.render-prod-container.outputs.task-definition }}
           service: web-app
           cluster: prod_web-app
