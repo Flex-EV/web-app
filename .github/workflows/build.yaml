@@ -46,23 +46,57 @@ jobs:
       - name: Create Environment File
         run: |
           if [[ "$GITHUB_REF" == "refs/heads/master" ]]; then
-            echo "VITE_GOOGLE_MAPS_API_KEY=${{ secrets.PROD_GOOGLE_MAPS_API_KEY }}" >> .env
-            echo "VITE_GOOGLE_MAP_ID=${{ secrets.PROD_GOOGLE_MAP_ID }}" >> .env
-            echo "VITE_API_BASE_URL=${{ secrets.PROD_API_BASE_URL }}" >> .env
+            cat << EOF > .env
+          VITE_GOOGLE_MAPS_API_KEY=${{ secrets.PROD_GOOGLE_MAPS_API_KEY }}
+          VITE_GOOGLE_MAP_ID=${{ secrets.PROD_GOOGLE_MAP_ID }}
+          VITE_API_BASE_URL=${{ secrets.PROD_API_BASE_URL }}
+          EOF
           else
-            echo "VITE_GOOGLE_MAPS_API_KEY=${{ secrets.DEV_GOOGLE_MAPS_API_KEY }}" >> .env
-            echo "VITE_GOOGLE_MAP_ID=${{ secrets.DEV_GOOGLE_MAP_ID }}" >> .env
-            echo "VITE_API_BASE_URL=${{ secrets.DEV_API_BASE_URL }}" >> .env
+            cat << EOF > .env
+          VITE_GOOGLE_MAPS_API_KEY=${{ secrets.DEV_GOOGLE_MAPS_API_KEY }}
+          VITE_GOOGLE_MAP_ID=${{ secrets.DEV_GOOGLE_MAP_ID }}
+          VITE_API_BASE_URL=${{ secrets.DEV_API_BASE_URL }}
+          EOF
           fi
 
-      - name: Validate .env File
-        run: cat .env
+      - name: Validate Environment Setup
+        run: |
+          echo "Checking environment variables (masked for security):"
+          echo "VITE_GOOGLE_MAPS_API_KEY: [$(echo ${{ secrets.DEV_GOOGLE_MAPS_API_KEY }} | cut -c1-3)...]"
+          echo "VITE_GOOGLE_MAP_ID: [$(echo ${{ secrets.DEV_GOOGLE_MAP_ID }} | cut -c1-3)...]"
+          echo "VITE_API_BASE_URL: [$(echo ${{ secrets.DEV_API_BASE_URL }} | cut -c1-3)...]"
+          
+          if [ ! -f .env ]; then
+            echo "Error: .env file not created"
+            exit 1
+          fi
+          
+          if ! grep -q "VITE_GOOGLE_MAPS_API_KEY" .env; then
+            echo "Error: VITE_GOOGLE_MAPS_API_KEY not found in .env"
+            exit 1
+          fi
 
       - name: Install Dependencies
         run: yarn install
 
       - name: Build Project
+        env:
+          VITE_GOOGLE_MAPS_API_KEY: ${{ secrets.DEV_GOOGLE_MAPS_API_KEY }}
+          VITE_GOOGLE_MAP_ID: ${{ secrets.DEV_GOOGLE_MAP_ID }}
+          VITE_API_BASE_URL: ${{ secrets.DEV_API_BASE_URL }}
         run: yarn build
+
+      - name: Verify Build Output
+        run: |
+          echo "Checking build output for environment variables (masked)..."
+          if [ -d "dist" ]; then
+            grep -r "VITE_" dist || echo "No raw environment variables found in build (good!)"
+            echo "Build directory exists and has files:"
+            ls -la dist
+          else
+            echo "Error: Build directory not found"
+            exit 1
+          fi
 
       - name: Upload Build Artifacts
         uses: actions/upload-artifact@v3
